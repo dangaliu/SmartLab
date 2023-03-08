@@ -48,5 +48,6 @@ class OnboardingFragment : Fragment() {
             )
         )
         binding.vpOnboarding.adapter = OnboardingAdapter(onboardingItems)
+        binding.circleIndicator.setViewPager(binding.vpOnboarding)
     }
 }
