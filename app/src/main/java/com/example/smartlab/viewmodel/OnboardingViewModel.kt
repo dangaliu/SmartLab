@@ -24,4 +24,6 @@ class OnboardingViewModel: ViewModel() {
             imageRes = R.drawable.onboarding_03
         )
     )
+
+    var scrollCount = 0
 }

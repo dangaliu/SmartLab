@@ -36,18 +36,51 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivOnboarding" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayoutIndicator"
-        android:layout_width="140dp"
+    <!--    <com.google.android.material.tabs.TabLayout-->
+    <!--        android:id="@+id/tabLayoutIndicator"-->
+    <!--        android:layout_width="140dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintVertical_bias="0.4"-->
+    <!--        android:background="@null"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/vpOnboarding"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/vpOnboarding"-->
+    <!--        app:tabBackground="@drawable/tab_selector"-->
+    <!--        app:tabGravity="fill"-->
+    <!--        app:tabIndicatorHeight="0dp" />-->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintVertical_bias="0.4"
-        android:background="@null"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="@id/vpOnboarding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/vpOnboarding"
-        app:tabBackground="@drawable/tab_selector"
-        app:tabGravity="fill"
-        app:tabIndicatorHeight="0dp" />
+        app:layout_constraintVertical_bias="0.4">
+
+        <ImageView
+            android:id="@+id/indicator1"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="9dp"
+            android:src="@drawable/selected_indicator" />
+
+        <ImageView
+            android:id="@+id/indicator2"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="9dp"
+            android:src="@drawable/unselected_indicator" />
+
+        <ImageView
+            android:id="@+id/indicator3"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:src="@drawable/unselected_indicator" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
