@@ -13,6 +13,7 @@ import com.example.smartlab.utils.SwipeControlTouchListener
 import com.example.smartlab.utils.SwipeDirection
 import com.example.smartlab.view.adapters.OnboardingAdapter
 import com.example.smartlab.viewmodel.OnboardingViewModel
+import com.google.android.material.tabs.TabLayoutMediator
 
 class OnboardingFragment : Fragment() {
 
@@ -34,12 +35,15 @@ class OnboardingFragment : Fragment() {
     }
 
     private fun initOnboardingViewPager() {
-        binding.vpOnboarding.adapter = OnboardingAdapter(viewModel.onboardingItems)
+        binding.vpOnboarding.adapter = OnboardingAdapter(
+            requireActivity(), viewModel.onboardingItems
+        )
         (binding.vpOnboarding[0] as RecyclerView).addOnItemTouchListener(SwipeControlTouchListener().apply {
             setSwipeDirection(
                 SwipeDirection.RIGHT
             )
         })
-        binding.circleIndicator.setViewPager(binding.vpOnboarding)
+        TabLayoutMediator(binding.tabLayoutIndicator, binding.vpOnboarding) { _, _ -> }.attach()
+        (binding.vpOnboarding[0] as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
     }
 }
