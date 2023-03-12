@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.smartlab.R
+import com.example.smartlab.app.SmartLabApplication
 import com.example.smartlab.databinding.FragmentSplashBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -29,7 +30,13 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
             delay(1500)
-            findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
+            (requireContext().applicationContext.applicationContext as SmartLabApplication).isOnboardingPassedFlow.collect {
+                if (it) {
+                    findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                } else {
+                    findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
+                }
+            }
         }
     }
 }

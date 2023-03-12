@@ -40,6 +40,7 @@ class OnboardingFragment : Fragment() {
 
     private fun setListeners() {
         binding.tvOnboarding.setOnClickListener {
+            viewModel.setOnboardingPassed()
             findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
         }
     }
