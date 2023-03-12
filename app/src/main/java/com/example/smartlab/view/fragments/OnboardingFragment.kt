@@ -15,7 +15,6 @@ import com.example.smartlab.utils.SwipeControlTouchListener
 import com.example.smartlab.utils.SwipeDirection
 import com.example.smartlab.view.adapters.OnboardingAdapter
 import com.example.smartlab.viewmodel.OnboardingViewModel
-import com.google.android.material.tabs.TabLayoutMediator
 
 class OnboardingFragment : Fragment() {
 
@@ -33,7 +32,16 @@ class OnboardingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setObservers()
         initOnboardingViewPager()
+    }
+
+    private fun setObservers() {
+        viewModel.isLastScreen.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.tvOnboarding.text = "Завершить"
+            }
+        }
     }
 
     private fun initOnboardingViewPager() {
@@ -49,6 +57,11 @@ class OnboardingFragment : Fragment() {
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                viewModel.scrollCount++
+                if (viewModel.scrollCount == 3) {
+                    binding.vpOnboarding.isUserInputEnabled = false
+                    viewModel.isLastScreen.value = true
+                }
                 when (position) {
                     0 -> {
                         binding.indicator1.setImageResource(R.drawable.selected_indicator)
@@ -59,19 +72,18 @@ class OnboardingFragment : Fragment() {
                         binding.indicator1.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator2.setImageResource(R.drawable.selected_indicator)
                         binding.indicator3.setImageResource(R.drawable.unselected_indicator)
-                        viewModel.onboardingItems.removeAt(0)
+                        viewModel.onboardingItems.removeFirst()
                         onboardingAdapter.updatePages(viewModel.onboardingItems)
                     }
                     2 -> {
                         binding.indicator1.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator2.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator3.setImageResource(R.drawable.selected_indicator)
-                        viewModel.onboardingItems.removeAt(0)
+                        viewModel.onboardingItems.removeFirst()
                         onboardingAdapter.updatePages(viewModel.onboardingItems)
                     }
                 }
             }
         })
-        (binding.vpOnboarding[0] as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
     }
 }

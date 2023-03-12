@@ -11,7 +11,7 @@ class OnboardingAdapter(
     val fragmentActivity: FragmentActivity
 ) : FragmentStateAdapter(fragmentActivity) {
 
-    var items: MutableList<OnboardingItem> = mutableListOf()
+    var items: ArrayDeque<OnboardingItem> = ArrayDeque(mutableListOf())
     override fun getItemCount(): Int {
         return 3
     }
@@ -21,7 +21,7 @@ class OnboardingAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updatePages(items: MutableList<OnboardingItem>) {
+    fun updatePages(items: ArrayDeque<OnboardingItem>) {
         this.items = items
         notifyDataSetChanged()
     }
