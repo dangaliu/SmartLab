@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.smartlab.R
@@ -33,7 +34,14 @@ class OnboardingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
+        setListeners()
         initOnboardingViewPager()
+    }
+
+    private fun setListeners() {
+        binding.tvOnboarding.setOnClickListener {
+            findNavController().navigate(R.id.action_onboardingFragment_to_loginFragment)
+        }
     }
 
     private fun setObservers() {
