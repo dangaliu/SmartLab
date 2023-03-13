@@ -1,6 +1,7 @@
 package com.example.smartlab.view.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,6 +70,7 @@ class OnboardingFragment : Fragment() {
                 viewModel.scrollCount++
                 if (viewModel.scrollCount == 3) {
                     binding.vpOnboarding.isUserInputEnabled = false
+                    viewModel.onboardingItems.removeFirst()
                     viewModel.isLastScreen.value = true
                 }
                 when (position) {
@@ -92,6 +94,7 @@ class OnboardingFragment : Fragment() {
                         onboardingAdapter.updatePages(viewModel.onboardingItems)
                     }
                 }
+                Log.d("onboarding", "onPageSelected: ${viewModel.onboardingItems.size}")
             }
         })
     }
