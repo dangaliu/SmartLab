@@ -47,10 +47,8 @@ class OnboardingFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.isLastScreen.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.tvOnboarding.text = "Завершить"
-            }
+        viewModel.buttonText.observe(viewLifecycleOwner) {
+            binding.tvOnboarding.text = it
         }
     }
 
@@ -67,11 +65,10 @@ class OnboardingFragment : Fragment() {
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                viewModel.scrollCount++
-                if (viewModel.scrollCount == 3) {
+                if (viewModel.scrollCount == 2) {
                     binding.vpOnboarding.isUserInputEnabled = false
-                    viewModel.onboardingItems.removeFirst()
                     viewModel.isLastScreen.value = true
+                    viewModel.nextPage()
                 }
                 when (position) {
                     0 -> {
@@ -83,14 +80,14 @@ class OnboardingFragment : Fragment() {
                         binding.indicator1.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator2.setImageResource(R.drawable.selected_indicator)
                         binding.indicator3.setImageResource(R.drawable.unselected_indicator)
-                        viewModel.onboardingItems.removeFirst()
+                        viewModel.nextPage()
                         onboardingAdapter.updatePages(viewModel.onboardingItems)
                     }
                     2 -> {
                         binding.indicator1.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator2.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator3.setImageResource(R.drawable.selected_indicator)
-                        viewModel.onboardingItems.removeFirst()
+                        viewModel.nextPage()
                         onboardingAdapter.updatePages(viewModel.onboardingItems)
                     }
                 }

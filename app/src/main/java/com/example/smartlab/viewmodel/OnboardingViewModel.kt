@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.smartlab.R
 import com.example.smartlab.model.dto.OnboardingItem
@@ -35,6 +34,8 @@ class OnboardingViewModel(private val app: Application) : AndroidViewModel(app) 
         )
     )
 
+    var buttonText: MutableLiveData<String> = MutableLiveData("Пропустить")
+
     var scrollCount = 0
 
     var isLastScreen = MutableLiveData<Boolean>()
@@ -45,5 +46,11 @@ class OnboardingViewModel(private val app: Application) : AndroidViewModel(app) 
                 it[IS_ONBOARDING_PASSED] = true
             }
         }
+    }
+
+    fun nextPage(): OnboardingItem {
+        scrollCount++
+        if (scrollCount == 2) buttonText.value = "Завершить"
+        return onboardingItems.removeFirst()
     }
 }

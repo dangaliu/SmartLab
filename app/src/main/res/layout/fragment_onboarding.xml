@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="5dp"
-        android:text="Пропустить"
+        android:text="Null"
         android:textColor="#57A9FF"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
