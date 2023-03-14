@@ -47,8 +47,8 @@ class OnboardingViewModel(private val app: Application) : AndroidViewModel(app) 
     fun setOnboardingPassed() {
         onboardingPassedCallCount++
         viewModelScope.launch {
-            app.dataStore.edit {
-                it[IS_ONBOARDING_PASSED] = true
+            app.dataStore.edit { prefs ->
+                prefs[IS_ONBOARDING_PASSED] = true
             }
         }
     }
