@@ -40,7 +40,12 @@ class OnboardingViewModel(private val app: Application) : AndroidViewModel(app) 
 
     var isLastScreen = MutableLiveData<Boolean>()
 
+    var isNavigatedToLoginScreen = false
+
+    var onboardingPassedCallCount = 0
+
     fun setOnboardingPassed() {
+        onboardingPassedCallCount++
         viewModelScope.launch {
             app.dataStore.edit {
                 it[IS_ONBOARDING_PASSED] = true
@@ -52,5 +57,10 @@ class OnboardingViewModel(private val app: Application) : AndroidViewModel(app) 
         scrollCount++
         if (scrollCount == 2) buttonText.value = "Завершить"
         return onboardingItems.removeFirst()
+    }
+
+    fun navigateToLoginScreen() {
+        setOnboardingPassed()
+        isNavigatedToLoginScreen = true
     }
 }

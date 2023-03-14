@@ -4,21 +4,49 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.smartlab.R
 import com.example.smartlab.app.SmartLabApplication
 import com.example.smartlab.model.dto.OnboardingItem
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.*
 import org.junit.Assert.assertEquals
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
+import org.mockito.Mockito
 import org.mockito.kotlin.mock
 
 class OnboardingViewModelTest {
+    @OptIn(ExperimentalCoroutinesApi::class)
+    class MainDispatcherRule (
+        val dispatcher: TestDispatcher = StandardTestDispatcher()
+    ): TestWatcher() {
+        override fun starting(description: Description) {
+            Dispatchers.setMain(dispatcher)
+        }
+
+        override fun finished(description: Description) {
+            Dispatchers.resetMain()
+        }
+    }
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     val application = mock<SmartLabApplication>()
+    lateinit var viewModel: OnboardingViewModel
+
+
+    @Before
+    fun before() {
+        viewModel = OnboardingViewModel(application)
+    }
 
     @Test
     fun `correctly extracting elements from the queue`() {
-        val viewModel = OnboardingViewModel(application)
         val firstElement = OnboardingItem(
             title = "Анализы",
             description = "Экспресс сбор и получение проб",
@@ -45,7 +73,6 @@ class OnboardingViewModelTest {
 
     @Test
     fun `should queue size decrease when nextPage() called`() {
-        val viewModel = OnboardingViewModel(application)
         assertEquals(3, viewModel.onboardingItems.size)
         viewModel.nextPage()
         assertEquals(2, viewModel.onboardingItems.size)
@@ -57,10 +84,22 @@ class OnboardingViewModelTest {
 
     @Test
     fun `should change button text when last page`() {
-        val viewModel = OnboardingViewModel(application)
         viewModel.nextPage()
         viewModel.nextPage()
         viewModel.nextPage()
         assertEquals("Завершить", viewModel.buttonText.value)
+    }
+
+    @Test
+    fun `should navigated to login screen when clicked navigate button`() {
+        viewModel.navigateToLoginScreen()
+        assertEquals(viewModel.isNavigatedToLoginScreen, true)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `should call onboarding passed`() = runTest {
+        viewModel.navigateToLoginScreen()
+        assertEquals(viewModel.onboardingPassedCallCount, 1)
     }
 }
