@@ -76,7 +76,8 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="17sp"
-            app:backgroundTint="@color/accent"
+            app:backgroundTint="@color/accent_inactive"
+            android:clickable="false"
             app:cornerRadius="10dp" />
     </LinearLayout>
 
