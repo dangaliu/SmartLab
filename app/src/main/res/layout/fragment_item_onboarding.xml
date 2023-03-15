@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvOnboardingTitle"
@@ -18,22 +20,29 @@
     <TextView
         android:id="@+id/tvOnboardingDescription"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="30dp"
+        android:layout_weight="6"
+        android:gravity="center_horizontal"
         android:text="Экспресс сбор и получение проб"
         android:textColor="#939396"
         app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvOnboardingTitle" />
 
     <ImageView
         android:id="@+id/ivOnboardingImage"
-        android:layout_width="0dp"
-        android:layout_height="270dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="7"
         android:src="@drawable/onboarding_03"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

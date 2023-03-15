@@ -87,6 +87,8 @@ class OnboardingFragment : Fragment() {
                         binding.indicator1.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator2.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator3.setImageResource(R.drawable.selected_indicator)
+                        viewModel.nextPage()
+                        onboardingAdapter.updatePages(viewModel.onboardingItems)
                     }
                 }
                 Log.d("onboarding", "onPageSelected: ${viewModel.onboardingItems.size}")
