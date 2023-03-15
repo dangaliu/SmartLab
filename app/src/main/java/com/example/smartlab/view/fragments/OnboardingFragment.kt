@@ -65,7 +65,7 @@ class OnboardingFragment : Fragment() {
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                if (viewModel.scrollCount == 2) {
+                if (viewModel.scrollCount == 1) {
                     binding.vpOnboarding.isUserInputEnabled = false
                     viewModel.isLastScreen.value = true
                     viewModel.nextPage()
@@ -87,8 +87,6 @@ class OnboardingFragment : Fragment() {
                         binding.indicator1.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator2.setImageResource(R.drawable.unselected_indicator)
                         binding.indicator3.setImageResource(R.drawable.selected_indicator)
-                        viewModel.nextPage()
-                        onboardingAdapter.updatePages(viewModel.onboardingItems)
                     }
                 }
                 Log.d("onboarding", "onPageSelected: ${viewModel.onboardingItems.size}")
