@@ -2,19 +2,26 @@ package com.example.smartlab.view.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.smartlab.databinding.FragmentEmailCodeBinding
 import com.example.smartlab.utils.GenericKeyEvent
 import com.example.smartlab.utils.GenericTextWatcher
+import com.example.smartlab.viewmodel.EmailCodeViewModel
 
 class EmailCodeFragment : Fragment() {
 
     private lateinit var binding: FragmentEmailCodeBinding
+
+    private val viewModel: EmailCodeViewModel by viewModels()
+
+    private val TAG = this::class.simpleName
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,12 +34,20 @@ class EmailCodeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.getEmail()
         setupCodeEditors()
         setListeners()
+        setObservers()
     }
 
     private fun setListeners() {
         binding.ivBtnBack.setOnClickListener { findNavController().popBackStack() }
+    }
+
+    private fun setObservers() {
+        viewModel.signInStatus.observe(viewLifecycleOwner) {
+            Log.d(TAG, "setObservers: signInStatus - $it ")
+        }
     }
 
     private fun setupCodeEditors() {
@@ -52,6 +67,11 @@ class EmailCodeFragment : Fragment() {
                         view?.let {
                             imm.hideSoftInputFromWindow(it.windowToken, 0)
                         }
+                        val code = binding.etCode1.text.toString() +
+                                binding.etCode2.text.toString() +
+                                binding.etCode3.text.toString() +
+                                binding.etCode4.text.toString()
+                        viewModel.signIn(viewModel.email.value ?: "", code)
                     })
             )
 

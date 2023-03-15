@@ -23,12 +23,11 @@ object DataStore {
 
     }
 
-    suspend fun getToken(context: Context): Flow<String> {
-        return flow {
-            context.dataStore.data.map {
-                emit(it[TOKEN] ?: "")
-            }
+    fun getToken(context: Context): Flow<String> {
+        val token = context.dataStore.data.map {
+            it[TOKEN] ?: ""
         }
+        return token
     }
 
     suspend fun saveEmail(context: Context, email: String): Flow<SaveStatus> {
@@ -40,12 +39,11 @@ object DataStore {
         }
     }
 
-    suspend fun getEmail(context: Context): Flow<String> {
-        return flow {
-            context.dataStore.data.map {
-                emit(it[EMAIL] ?: "")
-            }
+    fun getEmail(context: Context): Flow<String> {
+        val email = context.dataStore.data.map {
+            it[EMAIL] ?: ""
         }
+        return email
     }
 }
 
