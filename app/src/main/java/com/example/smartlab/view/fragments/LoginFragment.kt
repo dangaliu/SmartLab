@@ -5,16 +5,18 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.smartlab.R
 import com.example.smartlab.databinding.FragmentLoginBinding
 import com.example.smartlab.utils.isEmailValid
+import com.example.smartlab.utils.showToast
 import com.example.smartlab.viewmodel.LoginViewModel
+import com.example.smartlab.viewmodel.SendCodeStatus
 
 class LoginFragment : Fragment() {
 
@@ -50,6 +52,10 @@ class LoginFragment : Fragment() {
     private fun setObservers() {
         viewModel.sendCodeStatus.observe(viewLifecycleOwner) {
             Log.d(TAG, "setObservers: $it")
+            when (it) {
+                SendCodeStatus.SUCCESS -> findNavController().navigate(R.id.action_loginFragment_to_emailCodeFragment)
+                SendCodeStatus.FAIL -> requireContext().showToast("Ошибка при отправке кода")
+            }
         }
     }
 
