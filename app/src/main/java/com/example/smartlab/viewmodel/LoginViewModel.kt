@@ -19,10 +19,13 @@ class LoginViewModel: ViewModel() {
                 422 -> _sendCodeStatus.value = SendCodeStatus.FAIL
             }
         }
+    }
 
+    fun clearSendCodeStatus() {
+        _sendCodeStatus.value = SendCodeStatus.NOTHING
     }
 }
 
 enum class SendCodeStatus {
-    SUCCESS, FAIL
+    SUCCESS, FAIL, NOTHING
 }

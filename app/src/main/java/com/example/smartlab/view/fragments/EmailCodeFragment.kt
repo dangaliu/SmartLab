@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.smartlab.databinding.FragmentEmailCodeBinding
 import com.example.smartlab.utils.GenericKeyEvent
 import com.example.smartlab.utils.GenericTextWatcher
@@ -27,6 +28,11 @@ class EmailCodeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCodeEditors()
+        setListeners()
+    }
+
+    private fun setListeners() {
+        binding.ivBtnBack.setOnClickListener { findNavController().popBackStack() }
     }
 
     private fun setupCodeEditors() {
@@ -40,6 +46,7 @@ class EmailCodeFragment : Fragment() {
                     etCode4,
                     null,
                     onLastEditTextFilled = {
+                        etCode4.clearFocus()
                         val imm =
                             requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                         view?.let {

@@ -43,9 +43,8 @@ class LoginFragment : Fragment() {
 
     private fun setListeners() {
         binding.btnNext.setOnClickListener {
-            if (it.isClickable) {
-                viewModel.sendCode(binding.etEmail.text.toString())
-            }
+            Log.d(TAG, "setListeners: Enabled: ${it.isEnabled}")
+            viewModel.sendCode(binding.etEmail.text.toString())
         }
     }
 
@@ -53,14 +52,20 @@ class LoginFragment : Fragment() {
         viewModel.sendCodeStatus.observe(viewLifecycleOwner) {
             Log.d(TAG, "setObservers: $it")
             when (it) {
-                SendCodeStatus.SUCCESS -> findNavController().navigate(R.id.action_loginFragment_to_emailCodeFragment)
-                SendCodeStatus.FAIL -> requireContext().showToast("Ошибка при отправке кода")
+                SendCodeStatus.SUCCESS -> {
+                    findNavController().navigate(R.id.action_loginFragment_to_emailCodeFragment)
+                    viewModel.clearSendCodeStatus()
+                }
+                SendCodeStatus.FAIL -> {
+                    requireContext().showToast("Ошибка при отправке кода")
+                }
+                SendCodeStatus.NOTHING -> {}
             }
         }
     }
 
     private fun setEmailEditTextTextWatcher() {
-        binding.btnNext.isClickable = false
+        binding.btnNext.isEnabled = false
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -69,14 +74,14 @@ class LoginFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 s?.let {
                     if (isEmailValid(it.toString())) {
-                        binding.btnNext.isClickable = true
+                        binding.btnNext.isEnabled = true
                         binding.btnNext.backgroundTintList = ColorStateList.valueOf(
                             resources.getColor(
                                 R.color.accent, null
                             )
                         )
                     } else {
-                        binding.btnNext.isClickable = false
+                        binding.btnNext.isEnabled = false
                         binding.btnNext.backgroundTintList = ColorStateList.valueOf(
                             resources.getColor(
                                 R.color.accent_inactive, null
@@ -85,7 +90,6 @@ class LoginFragment : Fragment() {
                     }
                 }
             }
-
         })
     }
 }
