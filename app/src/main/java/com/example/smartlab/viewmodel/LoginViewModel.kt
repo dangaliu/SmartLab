@@ -1,16 +1,24 @@
 package com.example.smartlab.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.smartlab.model.api.SmartLabClient
+import com.example.smartlab.utils.DataStore
+import com.example.smartlab.utils.SaveStatus
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class LoginViewModel: ViewModel() {
+class LoginViewModel(private val app: Application): AndroidViewModel(app) {
 
     private val _sendCodeStatus: MutableLiveData<SendCodeStatus> = MutableLiveData()
     val sendCodeStatus: LiveData<SendCodeStatus> = _sendCodeStatus
+
+    private val _saveEmailStatus: MutableLiveData<SaveStatus> = MutableLiveData()
+    val saveEmailStatus: LiveData<SaveStatus> = _saveEmailStatus
 
     fun sendCode(email: String) {
         viewModelScope.launch {
@@ -23,6 +31,14 @@ class LoginViewModel: ViewModel() {
 
     fun clearSendCodeStatus() {
         _sendCodeStatus.value = SendCodeStatus.NOTHING
+    }
+
+    fun saveEmail(email: String) {
+        viewModelScope.launch {
+            DataStore.saveEmail(app, email).collect {
+                _saveEmailStatus.value = it
+            }
+        }
     }
 }
 

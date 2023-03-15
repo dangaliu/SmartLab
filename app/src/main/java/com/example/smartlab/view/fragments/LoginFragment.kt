@@ -53,6 +53,7 @@ class LoginFragment : Fragment() {
             Log.d(TAG, "setObservers: $it")
             when (it) {
                 SendCodeStatus.SUCCESS -> {
+                    viewModel.saveEmail(binding.etEmail.text.toString())
                     findNavController().navigate(R.id.action_loginFragment_to_emailCodeFragment)
                     viewModel.clearSendCodeStatus()
                 }
@@ -61,6 +62,9 @@ class LoginFragment : Fragment() {
                 }
                 SendCodeStatus.NOTHING -> {}
             }
+        }
+        viewModel.saveEmailStatus.observe(viewLifecycleOwner) {
+            Log.d(TAG, "setObservers: SaveEmailStatus - ${it.name}")
         }
     }
 
