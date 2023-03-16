@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.example.smartlab.R
 import com.example.smartlab.databinding.FragmentEmailCodeBinding
 import com.example.smartlab.utils.GenericKeyEvent
 import com.example.smartlab.utils.GenericTextWatcher
@@ -72,6 +73,7 @@ class EmailCodeFragment : Fragment() {
             if (it == SaveStatus.SUCCESS) {
                 timer.cancel()
                 viewModel.clearSignInStatus()
+                findNavController().navigate(R.id.action_emailCodeFragment_to_createPasswordFragment)
             }
         }
     }
