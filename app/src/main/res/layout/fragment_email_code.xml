@@ -90,6 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="48dp"
             android:gravity="center"
+            android:id="@+id/tvTimer"
             android:text="Отправить код повторно можно будет через 59 секунд"
             android:textColor="#939396"
             android:textSize="15sp" />

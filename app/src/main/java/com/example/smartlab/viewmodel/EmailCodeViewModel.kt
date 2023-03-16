@@ -1,6 +1,7 @@
 package com.example.smartlab.viewmodel
 
 import android.app.Application
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -21,6 +22,11 @@ class EmailCodeViewModel(private val app: Application) : AndroidViewModel(app) {
     private val _email: MutableLiveData<String> = MutableLiveData()
     val email: LiveData<String> = _email
 
+    private val _sendCodeStatus: MutableLiveData<SendCodeStatus> = MutableLiveData()
+    val sendCodeStatus: LiveData<SendCodeStatus> = _sendCodeStatus
+
+    private var isTimerWorking = false
+
     fun signIn(email: String, code: String) {
         viewModelScope.launch {
             val response = SmartLabClient.retrofit.signIn(email, code)
@@ -35,6 +41,26 @@ class EmailCodeViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun startTimer(timer: CountDownTimer) {
+        timer.start()
+        isTimerWorking = true
+    }
+
+    fun stopTimer(timer: CountDownTimer) {
+        timer.cancel()
+        isTimerWorking = false
+    }
+
+
+    fun sendCode(email: String) {
+        viewModelScope.launch {
+            when (SmartLabClient.retrofit.sendCode(email).code()) {
+                200 -> _sendCodeStatus.value = SendCodeStatus.SUCCESS
+                422 -> _sendCodeStatus.value = SendCodeStatus.FAIL
+            }
+        }
+    }
+
     fun getEmail() {
         viewModelScope.launch {
             DataStore.getEmail(app).collect {
@@ -43,7 +69,7 @@ class EmailCodeViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun clearEmail() {
-        _email.value = ""
+    fun clearSignInStatus() {
+        _signInStatus.value = SaveStatus.NOTHING
     }
 }

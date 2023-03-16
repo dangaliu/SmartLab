@@ -2,6 +2,7 @@ package com.example.smartlab.view.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.smartlab.databinding.FragmentEmailCodeBinding
 import com.example.smartlab.utils.GenericKeyEvent
 import com.example.smartlab.utils.GenericTextWatcher
+import com.example.smartlab.utils.SaveStatus
 import com.example.smartlab.viewmodel.EmailCodeViewModel
+import kotlin.math.round
 
 class EmailCodeFragment : Fragment() {
 
@@ -22,6 +25,8 @@ class EmailCodeFragment : Fragment() {
     private val viewModel: EmailCodeViewModel by viewModels()
 
     private val TAG = this::class.simpleName
+
+    private lateinit var timer: CountDownTimer
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,15 +43,36 @@ class EmailCodeFragment : Fragment() {
         setupCodeEditors()
         setListeners()
         setObservers()
+        initTimer()
+        viewModel.startTimer(timer)
     }
 
     private fun setListeners() {
         binding.ivBtnBack.setOnClickListener { findNavController().popBackStack() }
     }
 
+    private fun initTimer() {
+        timer = object : CountDownTimer(60000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                binding.tvTimer.text =
+                    "Отправить код повторно можно будет через ${round(millisUntilFinished.toFloat() / 1000).toInt()} секунд"
+            }
+
+            override fun onFinish() {
+                viewModel.stopTimer(timer)
+                viewModel.startTimer(timer)
+                viewModel.sendCode(viewModel.email.value ?: "")
+            }
+        }
+    }
+
     private fun setObservers() {
         viewModel.signInStatus.observe(viewLifecycleOwner) {
             Log.d(TAG, "setObservers: signInStatus - $it ")
+            if (it == SaveStatus.SUCCESS) {
+                timer.cancel()
+                viewModel.clearSignInStatus()
+            }
         }
     }
 

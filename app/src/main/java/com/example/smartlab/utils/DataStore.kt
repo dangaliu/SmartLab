@@ -48,5 +48,5 @@ object DataStore {
 }
 
 enum class SaveStatus {
-    SUCCESS, FAIL
+    SUCCESS, FAIL, NOTHING
 }
