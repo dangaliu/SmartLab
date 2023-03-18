@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.smartlab.R
 import com.example.smartlab.databinding.FragmentCreatePasswordBinding
 
@@ -54,6 +55,9 @@ class CreatePasswordFragment : Fragment() {
                     }
                 }
             }
+        }
+        binding.tvSkip.setOnClickListener {
+            findNavController().navigate(R.id.action_createPasswordFragment_to_patientCardFragment)
         }
     }
 
