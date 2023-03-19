@@ -106,6 +106,7 @@
         android:textSize="17sp"
         app:backgroundTint="@color/white"
         app:cornerRadius="10dp"
+        android:stateListAnimator="@null"
         app:rippleColor="#1A000000"
         app:strokeColor="#EBEBEB"
         app:strokeWidth="1dp" />
