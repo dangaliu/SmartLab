@@ -115,8 +115,9 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/default_edit_text_selector"
             android:hint="Пол"
-            android:inputType="datetime"
             android:maxLines="1"
+            android:editable="false"
+            android:drawableEnd="@drawable/drop_down_arrow"
             android:padding="14dp"
             android:textColor="@color/black"
             android:textSize="15sp" />
