@@ -13,6 +13,7 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.smartlab.R
 import com.example.smartlab.databinding.FragmentPatientCardBinding
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
@@ -48,11 +49,17 @@ class PatientCardFragment : Fragment() {
         binding.btnCreatePatientCard.setOnClickListener {
             viewModel.createProfile(getPatientCardData())
         }
+        binding.tvSkip.setOnClickListener {
+            findNavController().navigate(R.id.action_patientCardFragment_to_mainFragment)
+        }
     }
 
     private fun setObservers() {
         viewModel.createProfileStatus.observe(viewLifecycleOwner) {
             Log.d(TAG, "setObservers: create profile $it")
+            if (it != null) {
+                findNavController().navigate(R.id.action_patientCardFragment_to_mainFragment)
+            }
         }
     }
 

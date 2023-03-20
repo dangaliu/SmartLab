@@ -67,6 +67,8 @@
             app:destination="@id/createPasswordFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
@@ -74,18 +76,35 @@
         android:id="@+id/createPasswordFragment"
         android:name="com.example.smartlab.view.fragments.CreatePasswordFragment"
         android:label="CreatePasswordFragment"
-        tools:layout="@layout/fragment_create_password" >
+        tools:layout="@layout/fragment_create_password">
         <action
             android:id="@+id/action_createPasswordFragment_to_patientCardFragment"
             app:destination="@id/patientCardFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/patientCardFragment"
         android:name="com.example.smartlab.view.fragments.PatientCardFragment"
-        tools:layout="@layout/fragment_patient_card"
-        android:label="PatientCardFragment" />
+        android:label="PatientCardFragment"
+        tools:layout="@layout/fragment_patient_card">
+        <action
+            android:id="@+id/action_patientCardFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.smartlab.view.fragments.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main" />
 </navigation>

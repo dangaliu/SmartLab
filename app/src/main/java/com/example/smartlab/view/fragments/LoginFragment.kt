@@ -54,8 +54,8 @@ class LoginFragment : Fragment() {
             when (it) {
                 SendCodeStatus.SUCCESS -> {
                     viewModel.saveEmail(binding.etEmail.text.toString())
-                    findNavController().navigate(R.id.action_loginFragment_to_emailCodeFragment)
                     viewModel.clearSendCodeStatus()
+                    findNavController().navigate(R.id.action_loginFragment_to_emailCodeFragment)
                 }
                 SendCodeStatus.FAIL -> {
                     requireContext().showToast("Ошибка при отправке кода")
