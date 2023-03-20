@@ -104,13 +104,13 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/default_edit_text_selector"
             android:hint="Дата рождения"
-            android:inputType="datetime"
+            android:inputType="date|text"
             android:maxLines="1"
             android:padding="14dp"
             android:textColor="@color/black"
             android:textSize="15sp" />
 
-        <EditText
+        <TextView
             android:id="@+id/etGender"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -120,10 +120,10 @@
             android:hint="Пол"
             android:maxLines="1"
             android:editable="false"
-            android:drawableEnd="@drawable/drop_down_arrow"
             android:padding="14dp"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            app:drawableEndCompat="@drawable/drop_down_arrow" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCreatePatientCard"
