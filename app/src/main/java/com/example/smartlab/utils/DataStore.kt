@@ -12,6 +12,7 @@ object DataStore {
     val IS_ONBOARDING_PASSED = booleanPreferencesKey("isOnboardingPassed")
     val TOKEN = stringPreferencesKey("token")
     val EMAIL = stringPreferencesKey("email")
+    val IS_CREATE_PATIENT_CARD_PASSED = booleanPreferencesKey("isCreatePatientCardPassed")
 
     suspend fun saveToken(context: Context, token: String): Flow<SaveStatus> {
         return flow {
@@ -44,6 +45,15 @@ object DataStore {
             it[EMAIL] ?: ""
         }
         return email
+    }
+
+    suspend fun saveCreatePatientCardPassed(context: Context): Flow<SaveStatus> {
+        return flow {
+            context.dataStore.edit {
+                it[IS_CREATE_PATIENT_CARD_PASSED] = true
+                emit(SaveStatus.SUCCESS)
+            }
+        }
     }
 }
 

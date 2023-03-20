@@ -17,12 +17,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.smartlab.R
 import com.example.smartlab.databinding.FragmentPatientCardBinding
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
-import com.example.smartlab.viewmodel.PatientCardViewModel
+import com.example.smartlab.viewmodel.CreatePatientCardViewModel
 
-class PatientCardFragment : Fragment() {
+class CreatePatientCardFragment : Fragment() {
 
     private lateinit var binding: FragmentPatientCardBinding
-    private val viewModel: PatientCardViewModel by viewModels()
+    private val viewModel: CreatePatientCardViewModel by viewModels()
 
     private val TAG = this::class.java.simpleName
 
@@ -50,7 +50,8 @@ class PatientCardFragment : Fragment() {
             viewModel.createProfile(getPatientCardData())
         }
         binding.tvSkip.setOnClickListener {
-            findNavController().navigate(R.id.action_patientCardFragment_to_mainFragment)
+            viewModel.setCreatePatientCardPassed()
+            findNavController().navigate(R.id.action_patientCardFragment_to_mainActivity)
         }
     }
 
@@ -58,7 +59,8 @@ class PatientCardFragment : Fragment() {
         viewModel.createProfileStatus.observe(viewLifecycleOwner) {
             Log.d(TAG, "setObservers: create profile $it")
             if (it != null) {
-                findNavController().navigate(R.id.action_patientCardFragment_to_mainFragment)
+                viewModel.setCreatePatientCardPassed()
+                findNavController().navigate(R.id.action_patientCardFragment_to_mainActivity)
             }
         }
     }

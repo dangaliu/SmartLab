@@ -30,13 +30,21 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
             delay(1500)
-            (requireContext().applicationContext.applicationContext as SmartLabApplication).isOnboardingPassedFlow.collect {
-                if (it) {
-                    findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+            (requireContext().applicationContext.applicationContext as SmartLabApplication).isCreateProfilePassed.collect { isCreatePatientCardPassed ->
+                if (isCreatePatientCardPassed) {
+                    findNavController().navigate(R.id.action_splashFragment_to_mainActivity)
+                    requireActivity().finish()
                 } else {
-                    findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
+                    (requireContext().applicationContext.applicationContext as SmartLabApplication).isOnboardingPassedFlow.collect { isOnboardingPassed ->
+                        if (isOnboardingPassed) {
+                            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+                        } else {
+                            findNavController().navigate(R.id.action_splashFragment_to_onboardingFragment)
+                        }
+                    }
                 }
             }
+
         }
     }
 }
