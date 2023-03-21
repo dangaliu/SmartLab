@@ -3,8 +3,10 @@ package com.example.smartlab.model.api
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
 import com.example.smartlab.model.api.responseModels.CreateProfileResponse
 import com.example.smartlab.model.api.responseModels.TokenResponse
+import com.example.smartlab.model.dto.NewsItem
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 
@@ -24,4 +26,7 @@ interface SmartLabService {
         @Header("Authorization") token: String,
         @Body profile: CreateProfileRequest
     ): Response<CreateProfileResponse>
+
+    @GET("api/news")
+    suspend fun getNews(): Response<List<NewsItem>>
 }
