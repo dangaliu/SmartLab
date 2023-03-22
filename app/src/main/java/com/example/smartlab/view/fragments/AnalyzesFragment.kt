@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.smartlab.R
+import com.example.smartlab.databinding.ChipItemBinding
 import com.example.smartlab.databinding.FragmentAnalyzesBinding
 import com.example.smartlab.view.adapters.NewsAdapter
 import com.example.smartlab.viewmodel.AnalyzesViewModel
-import com.google.android.material.chip.Chip
 
 class AnalyzesFragment : Fragment() {
 
@@ -42,17 +41,13 @@ class AnalyzesFragment : Fragment() {
             newsAdapter.updateItems(it)
         }
         viewModel.categories.observe(viewLifecycleOwner) { categories ->
-            categories.forEach {
-                binding.chipGroup.addView(
-                    Chip(
-                        requireContext(),
-                        null,
-                        R.style.DefaultChipStyle
-                    ).apply {
-                        text = it
-                    })
+            categories.forEachIndexed { index, category ->
+                val chip =
+                    ChipItemBinding.inflate(layoutInflater).rootChip.apply { text = category }
+                binding.chipGroup.addView(chip.apply {
+                    id = index
+                })
             }
-
         }
     }
 
