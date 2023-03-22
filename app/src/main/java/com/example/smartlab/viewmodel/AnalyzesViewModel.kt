@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.smartlab.model.api.SmartLabClient
-import com.example.smartlab.model.dto.AnalysisItem
+import com.example.smartlab.model.dto.CatalogItem
 import com.example.smartlab.model.dto.NewsItem
 import kotlinx.coroutines.launch
 
@@ -17,8 +17,8 @@ class AnalyzesViewModel : ViewModel() {
     private val _categories: MutableLiveData<HashSet<String>> = MutableLiveData()
     val categories: LiveData<HashSet<String>> = _categories
 
-    private val _catalog: MutableLiveData<List<AnalysisItem>> = MutableLiveData()
-    val catalog: LiveData<List<AnalysisItem>> = _catalog
+    private val _catalog: MutableLiveData<List<CatalogItem>> = MutableLiveData()
+    val catalog: LiveData<List<CatalogItem>> = _catalog
 
     fun getNews() {
         viewModelScope.launch {

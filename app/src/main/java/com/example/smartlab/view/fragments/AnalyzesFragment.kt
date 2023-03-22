@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartlab.databinding.ChipItemBinding
 import com.example.smartlab.databinding.FragmentAnalyzesBinding
+import com.example.smartlab.view.adapters.CatalogAdapter
 import com.example.smartlab.view.adapters.NewsAdapter
 import com.example.smartlab.viewmodel.AnalyzesViewModel
 
@@ -18,6 +19,7 @@ class AnalyzesFragment : Fragment() {
     private val viewModel: AnalyzesViewModel by viewModels()
 
     private lateinit var newsAdapter: NewsAdapter
+    private lateinit var catalogAdapter: CatalogAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +33,7 @@ class AnalyzesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initNewsRecyclerView()
+        initCatalogRecyclerView()
         viewModel.getNews()
         viewModel.getCatalog()
         setObservers()
@@ -39,6 +42,9 @@ class AnalyzesFragment : Fragment() {
     private fun setObservers() {
         viewModel.news.observe(viewLifecycleOwner) {
             newsAdapter.updateItems(it)
+        }
+        viewModel.catalog.observe(viewLifecycleOwner) {
+            catalogAdapter.updateItems(it)
         }
         viewModel.categories.observe(viewLifecycleOwner) { categories ->
             categories.forEachIndexed { index, category ->
@@ -57,6 +63,14 @@ class AnalyzesFragment : Fragment() {
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = newsAdapter
+        }
+    }
+
+    private fun initCatalogRecyclerView() {
+        catalogAdapter = CatalogAdapter(requireContext(), listOf())
+        binding.rvCatalog.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = catalogAdapter
         }
     }
 }

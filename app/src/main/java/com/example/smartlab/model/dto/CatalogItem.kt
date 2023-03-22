@@ -1,6 +1,6 @@
 package com.example.smartlab.model.dto
 
-data class AnalysisItem(
+data class CatalogItem(
     val id: String,
     val name: String,
     val description: String,

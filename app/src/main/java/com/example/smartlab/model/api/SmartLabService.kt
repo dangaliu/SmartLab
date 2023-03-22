@@ -3,7 +3,7 @@ package com.example.smartlab.model.api
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
 import com.example.smartlab.model.api.responseModels.CreateProfileResponse
 import com.example.smartlab.model.api.responseModels.TokenResponse
-import com.example.smartlab.model.dto.AnalysisItem
+import com.example.smartlab.model.dto.CatalogItem
 import com.example.smartlab.model.dto.NewsItem
 import retrofit2.Response
 import retrofit2.http.Body
@@ -32,5 +32,5 @@ interface SmartLabService {
     suspend fun getNews(): Response<List<NewsItem>>
 
     @GET("api/catalog")
-    suspend fun getCatalog(): Response<List<AnalysisItem>>
+    suspend fun getCatalog(): Response<List<CatalogItem>>
 }

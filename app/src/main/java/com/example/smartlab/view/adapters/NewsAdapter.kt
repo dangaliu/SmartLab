@@ -7,7 +7,7 @@ import android.widget.LinearLayout
 import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.smartlab.databinding.ItemNewsLayoutBinding
+import com.example.smartlab.databinding.ItemNewsBinding
 import com.example.smartlab.model.dto.NewsItem
 import com.example.smartlab.utils.dpToPx
 
@@ -16,12 +16,12 @@ class NewsAdapter(
     var news: List<NewsItem>
 ) : RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
-    inner class NewsViewHolder(val binding: ItemNewsLayoutBinding) :
+    inner class NewsViewHolder(val binding: ItemNewsBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val binding =
-            ItemNewsLayoutBinding.inflate(LayoutInflater.from(context), parent, false)
+            ItemNewsBinding.inflate(LayoutInflater.from(context), parent, false)
         return NewsViewHolder(binding)
     }
 
