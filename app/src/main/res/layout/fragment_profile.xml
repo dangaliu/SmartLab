@@ -110,7 +110,7 @@
             app:drawableEndCompat="@drawable/drop_down_arrow" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCreatePatientCard"
+            android:id="@+id/btnSavePatientCard"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginHorizontal="20dp"

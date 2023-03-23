@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -41,6 +42,7 @@ class ProfileFragment : Fragment() {
             }
         }
         createProfileBinding = FragmentPatientCardBinding.inflate(inflater, container, false)
+            .apply { tvSkip.visibility = View.GONE }
         return createProfileBinding!!.root
     }
 
@@ -48,7 +50,87 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setTextWatchersToEditTextInLayout()
         viewModel.getPatientCard()
+        setListeners()
         setObservers()
+    }
+
+    private fun setListeners() {
+        if (editProfileBinding != null) {
+            editProfileBinding!!.etGender.setOnClickListener {
+                showGenderPopUpMenu(editProfileBinding!!.etGender)
+            }
+            editProfileBinding!!.btnSavePatientCard.setOnClickListener {
+                with(editProfileBinding!!) {
+                    val firstname = etName.text.toString()
+                    val middlename = etMiddleName.text.toString()
+                    val lastname = etSurname.text.toString()
+                    val bith = etDateOfBirth.text.toString()
+                    val gender = etGender.text.toString()
+                    val image = ""
+                    viewModel.updateProfile(
+                        CreateProfileRequest(firstname, lastname, middlename, bith, gender, image)
+                    )
+                    viewModel.savePatientCard(
+                        getPatientCardData(firstname, lastname, middlename, bith, gender, image)
+                    )
+                }
+            }
+        } else {
+            createProfileBinding!!.etGender.setOnClickListener {
+                showGenderPopUpMenu(createProfileBinding!!.etGender)
+            }
+            createProfileBinding!!.btnCreatePatientCard.setOnClickListener {
+                with(createProfileBinding!!) {
+                    val firstname = etName.text.toString()
+                    val middlename = etMiddleName.text.toString()
+                    val lastname = etSurname.text.toString()
+                    val bith = etDateOfBirth.text.toString()
+                    val gender = etGender.text.toString()
+                    val image = ""
+
+                    viewModel.createProfile(
+                        getPatientCardData(firstname, lastname, middlename, bith, gender, image)
+                    )
+                    viewModel.savePatientCard(
+                        getPatientCardData(firstname, lastname, middlename, bith, gender, image)
+                    )
+                }
+            }
+        }
+    }
+
+    private fun getPatientCardData(
+        firstname: String,
+        lastname: String,
+        middlename: String,
+        bith: String,
+        gender: String,
+        image: String
+    ): CreateProfileRequest {
+        return CreateProfileRequest(
+            firstname = firstname,
+            lastname = lastname,
+            middlename = middlename,
+            bith = bith,
+            pol = gender,
+            image = image
+        )
+    }
+
+    private fun showGenderPopUpMenu(etGender: TextView) {
+        val popUpMenu = PopupMenu(requireContext(), etGender)
+        popUpMenu.inflate(R.menu.gender_popup_menu)
+        popUpMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.male, R.id.female -> {
+                    etGender.text = it.title
+                    checkAllEditText()
+                    true
+                }
+                else -> false
+            }
+        }
+        popUpMenu.show()
     }
 
     private fun setObservers() {
@@ -96,15 +178,15 @@ class ProfileFragment : Fragment() {
 
                         override fun afterTextChanged(s: Editable?) {
                             if (checkAllEditText()) {
-                                editProfileBinding!!.btnCreatePatientCard.backgroundTintList =
+                                editProfileBinding!!.btnSavePatientCard.backgroundTintList =
                                     ColorStateList.valueOf(resources.getColor(R.color.accent, null))
-                                editProfileBinding!!.btnCreatePatientCard.isEnabled = true
+                                editProfileBinding!!.btnSavePatientCard.isEnabled = true
                             } else {
-                                editProfileBinding!!.btnCreatePatientCard.backgroundTintList =
+                                editProfileBinding!!.btnSavePatientCard.backgroundTintList =
                                     ColorStateList.valueOf(
                                         resources.getColor(R.color.accent_inactive, null)
                                     )
-                                editProfileBinding!!.btnCreatePatientCard.isEnabled = false
+                                editProfileBinding!!.btnSavePatientCard.isEnabled = false
                             }
                         }
                     })
