@@ -1,84 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:layout_height="wrap_content">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/etSearch"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/default_edit_text_selector"
-            android:drawableStart="@drawable/loupe"
-            android:drawablePadding="8dp"
-            android:hint="Искать анализы"
-            android:paddingStart="14dp"
-            android:textSize="16sp"
-            tools:ignore="RtlSymmetry" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="32dp"
-            android:text="Акции и новости"
-            android:textColor="#939396"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/default_edit_text_selector"
+                android:drawableStart="@drawable/loupe"
+                android:drawablePadding="8dp"
+                android:hint="Искать анализы"
+                android:paddingStart="14dp"
+                android:textSize="16sp"
+                tools:ignore="RtlSymmetry" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvNews"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:paddingHorizontal="20dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_news" />
+            <TextView
+                android:id="@+id/tvNews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="32dp"
+                android:text="Акции и новости"
+                android:textColor="#939396"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="32dp"
-            android:text="Каталог анализов"
-            android:textColor="#939396"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none">
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroup"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvNews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
                 android:paddingHorizontal="20dp"
-                app:chipSpacingHorizontal="16dp"
-                app:singleLine="true"
-                app:singleSelection="true" />
-        </HorizontalScrollView>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_news" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/rvCatalog"
-            android:layout_marginTop="10dp"
-            android:layout_marginHorizontal="10dp"
-            tools:listitem="@layout/item_catalog" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="32dp"
+                android:text="Каталог анализов"
+                android:textColor="#939396"
+                android:textSize="17sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:paddingHorizontal="20dp"
+                    app:chipSpacingHorizontal="16dp"
+                    app:singleLine="true"
+                    app:singleSelection="true" />
+            </HorizontalScrollView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCatalog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_catalog" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

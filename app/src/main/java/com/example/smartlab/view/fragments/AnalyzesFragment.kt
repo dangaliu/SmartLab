@@ -4,14 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isEmpty
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartlab.databinding.ChipItemBinding
 import com.example.smartlab.databinding.FragmentAnalyzesBinding
 import com.example.smartlab.view.adapters.CatalogAdapter
 import com.example.smartlab.view.adapters.NewsAdapter
 import com.example.smartlab.viewmodel.AnalyzesViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AnalyzesFragment : Fragment() {
 
@@ -32,6 +36,7 @@ class AnalyzesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initSwipeRefreshLayout()
         initNewsRecyclerView()
         initCatalogRecyclerView()
         viewModel.getNews()
@@ -47,12 +52,14 @@ class AnalyzesFragment : Fragment() {
             catalogAdapter.updateItems(it)
         }
         viewModel.categories.observe(viewLifecycleOwner) { categories ->
-            categories.forEachIndexed { index, category ->
-                val chip =
-                    ChipItemBinding.inflate(layoutInflater).rootChip.apply { text = category }
-                binding.chipGroup.addView(chip.apply {
-                    id = index
-                })
+            if (binding.chipGroup.isEmpty()) {
+                categories.forEachIndexed { index, category ->
+                    val chip =
+                        ChipItemBinding.inflate(layoutInflater).rootChip.apply { text = category }
+                    binding.chipGroup.addView(chip.apply {
+                        id = index
+                    })
+                }
             }
         }
     }
@@ -71,6 +78,17 @@ class AnalyzesFragment : Fragment() {
         binding.rvCatalog.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = catalogAdapter
+        }
+    }
+
+    private fun initSwipeRefreshLayout() {
+        binding.root.setOnRefreshListener {
+            lifecycleScope.launch {
+                delay(1000)
+                viewModel.getNews()
+                viewModel.getCatalog()
+                binding.root.isRefreshing = false
+            }
         }
     }
 }
