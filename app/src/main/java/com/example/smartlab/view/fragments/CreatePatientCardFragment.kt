@@ -48,6 +48,7 @@ class CreatePatientCardFragment : Fragment() {
         }
         binding.btnCreatePatientCard.setOnClickListener {
             viewModel.createProfile(getPatientCardData())
+            viewModel.savePatientCard(getPatientCardData())
         }
         binding.tvSkip.setOnClickListener {
             viewModel.setCreatePatientCardPassed()
@@ -126,10 +127,7 @@ class CreatePatientCardFragment : Fragment() {
                         } else {
                             binding.btnCreatePatientCard.backgroundTintList =
                                 ColorStateList.valueOf(
-                                    resources.getColor(
-                                        R.color.accent_inactive,
-                                        null
-                                    )
+                                    resources.getColor(R.color.accent_inactive, null)
                                 )
                             binding.btnCreatePatientCard.isEnabled = false
                         }
