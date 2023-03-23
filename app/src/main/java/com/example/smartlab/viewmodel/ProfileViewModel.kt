@@ -15,6 +15,8 @@ class ProfileViewModel(private val app: Application): AndroidViewModel(app) {
     private val _patientCard: MutableLiveData<CreateProfileRequest?> = MutableLiveData()
     val patientCard: LiveData<CreateProfileRequest?> = _patientCard
 
+    var isEditMode = false
+
     fun getPatientCard() {
         viewModelScope.launch {
             DataStore.getPatientCard(app).collect {
