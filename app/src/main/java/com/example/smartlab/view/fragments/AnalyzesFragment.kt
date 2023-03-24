@@ -36,12 +36,28 @@ class AnalyzesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setListeners()
         initSwipeRefreshLayout()
         initNewsRecyclerView()
         initCatalogRecyclerView()
         viewModel.getNews()
         viewModel.getCatalog()
         setObservers()
+    }
+
+    private fun setListeners() {
+        binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                binding.tvCancel.visibility = View.VISIBLE
+                binding.mainContainer.visibility = View.GONE
+            } else {
+                binding.tvCancel.visibility = View.GONE
+                binding.mainContainer.visibility = View.VISIBLE
+            }
+        }
+        binding.tvCancel.setOnClickListener {
+            binding.etSearch.clearFocus()
+        }
     }
 
     private fun setObservers() {
