@@ -1,7 +1,9 @@
 package com.example.smartlab.viewmodel
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -21,6 +23,9 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
     private val _createProfileStatus: MutableLiveData<CreateProfileResponse> = MutableLiveData()
     val createProfileStatus: LiveData<CreateProfileResponse> = _createProfileStatus
 
+    private val _avatarUri: MutableLiveData<Uri> = MutableLiveData()
+    val avatarUri: LiveData<Uri> = _avatarUri
+
     private val TAG = this::class.java.simpleName
 
     private var token: String = ""
@@ -34,6 +39,20 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     var isEditMode = false
+
+    fun saveAvatarUri(avatarUri: Uri) {
+        viewModelScope.launch {
+            DataStore.saveAvatarUri(app, avatarUri.toString())
+        }
+    }
+
+    fun getAvatarUri() {
+        viewModelScope.launch {
+            DataStore.getAvatarUri(app).collect {
+                _avatarUri.value = it.toUri()
+            }
+        }
+    }
 
     fun getPatientCard() {
         viewModelScope.launch {

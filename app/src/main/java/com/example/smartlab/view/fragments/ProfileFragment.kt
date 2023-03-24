@@ -22,10 +22,8 @@ import com.example.smartlab.databinding.FragmentPatientCardBinding
 import com.example.smartlab.databinding.FragmentProfileBinding
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
 import com.example.smartlab.viewmodel.ProfileViewModel
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
@@ -43,8 +41,10 @@ class ProfileFragment : Fragment() {
             if (success) {
                 editProfileBinding!!.ivAvatar.setImageURI(imageUri)
                 val requestFile = imageFile.asRequestBody("file".toMediaTypeOrNull())
-                val imagePart = MultipartBody.Part.createFormData("file", imageFile.name, requestFile)
+                val imagePart =
+                    MultipartBody.Part.createFormData("file", imageFile.name, requestFile)
                 viewModel.updateAvatar(imagePart)
+                viewModel.saveAvatarUri(imageUri)
             }
         }
 
@@ -97,6 +97,7 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setTextWatchersToEditTextInLayout()
         viewModel.getPatientCard()
+        viewModel.getAvatarUri()
         setListeners()
         setObservers()
     }
@@ -188,6 +189,13 @@ class ProfileFragment : Fragment() {
         viewModel.patientCard.observe(viewLifecycleOwner) {
             it?.let { patientCard: CreateProfileRequest ->
                 setPatientCardData(patientCard)
+            }
+        }
+        viewModel.avatarUri.observe(viewLifecycleOwner) { uri ->
+            editProfileBinding?.let {
+                if (uri.toString().isNotBlank()) {
+                    it.ivAvatar.setImageURI(uri)
+                }
             }
         }
     }

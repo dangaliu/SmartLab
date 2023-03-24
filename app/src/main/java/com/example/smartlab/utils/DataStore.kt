@@ -16,8 +16,25 @@ object DataStore {
     val TOKEN = stringPreferencesKey("token")
     val EMAIL = stringPreferencesKey("email")
     val IS_CREATE_PATIENT_CARD_PASSED = booleanPreferencesKey("isCreatePatientCardPassed")
+    val AVATAR_URI = stringPreferencesKey("avatarUri")
 
     val PATIENT_CARD = stringPreferencesKey("patientCard")
+
+    suspend fun saveAvatarUri(
+        context: Context,
+        avatarUri: String
+    ) {
+        context.dataStore.edit {
+            it[AVATAR_URI] = avatarUri
+        }
+    }
+
+    fun getAvatarUri(context: Context): Flow<String> {
+        val uri = context.dataStore.data.map {
+            it[AVATAR_URI] ?: ""
+        }
+        return uri
+    }
 
     suspend fun savePatientCard(
         context: Context,
