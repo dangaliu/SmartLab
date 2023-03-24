@@ -22,11 +22,28 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="7dp"
+            app:cardCornerRadius="60dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/ivAvatar"
+                android:layout_width="148dp"
+                android:layout_height="123dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_patient_card_image" />
+        </androidx.cardview.widget.CardView>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="7dp"
             android:text="Без карты пациента вы не сможете заказать анализы."
             android:textColor="#939396" />
 

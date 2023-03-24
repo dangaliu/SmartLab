@@ -1,6 +1,10 @@
 package com.example.smartlab.view.fragments
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,7 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.FileProvider
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,12 +23,50 @@ import com.example.smartlab.databinding.FragmentPatientCardBinding
 import com.example.smartlab.databinding.FragmentProfileBinding
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
 import com.example.smartlab.viewmodel.ProfileViewModel
+import java.io.File
 
 class ProfileFragment : Fragment() {
 
     private var editProfileBinding: FragmentProfileBinding? = null
     private var createProfileBinding: FragmentPatientCardBinding? = null
     private val viewModel: ProfileViewModel by viewModels()
+
+    private lateinit var imageUri: Uri
+
+    private val takePicture =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) {
+                editProfileBinding!!.ivAvatar.setImageURI(imageUri)
+            }
+        }
+
+    private var requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+
+    }
+
+    private fun createImageFile(): File {
+        val storageDir = requireContext().filesDir
+        return File.createTempFile("JPEG_${System.currentTimeMillis()}", ".jpg", storageDir)
+    }
+
+    private fun takePicture() {
+        val photoFile: File? = try {
+            createImageFile()
+        } catch (e: java.lang.Exception) {
+            null
+        }
+
+        photoFile?.let {
+            imageUri =
+                FileProvider.getUriForFile(requireContext(), "com.example.smartlab.provider", it)
+            if (requireContext().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                takePicture.launch(imageUri)
+            } else {
+                requestPermission.launch(Manifest.permission.CAMERA)
+            }
+
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +119,10 @@ class ProfileFragment : Fragment() {
                     )
                 }
             }
+            editProfileBinding!!.cvAvatar.setOnClickListener {
+                takePicture()
+            }
+
         } else {
             createProfileBinding!!.etGender.setOnClickListener {
                 showGenderPopUpMenu(createProfileBinding!!.etGender)
