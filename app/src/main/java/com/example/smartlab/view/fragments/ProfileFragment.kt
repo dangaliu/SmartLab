@@ -1,7 +1,6 @@
 package com.example.smartlab.view.fragments
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.net.Uri
@@ -23,6 +22,11 @@ import com.example.smartlab.databinding.FragmentPatientCardBinding
 import com.example.smartlab.databinding.FragmentProfileBinding
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
 import com.example.smartlab.viewmodel.ProfileViewModel
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 class ProfileFragment : Fragment() {
@@ -32,17 +36,20 @@ class ProfileFragment : Fragment() {
     private val viewModel: ProfileViewModel by viewModels()
 
     private lateinit var imageUri: Uri
+    private lateinit var imageFile: File
 
     private val takePicture =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success) {
                 editProfileBinding!!.ivAvatar.setImageURI(imageUri)
+                val requestFile = imageFile.asRequestBody("file".toMediaTypeOrNull())
+                val imagePart = MultipartBody.Part.createFormData("file", imageFile.name, requestFile)
+                viewModel.updateAvatar(imagePart)
             }
         }
 
-    private var requestPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-
-    }
+    private var requestPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
 
     private fun createImageFile(): File {
         val storageDir = requireContext().filesDir
@@ -50,13 +57,9 @@ class ProfileFragment : Fragment() {
     }
 
     private fun takePicture() {
-        val photoFile: File? = try {
-            createImageFile()
-        } catch (e: java.lang.Exception) {
-            null
-        }
+        imageFile = createImageFile()
 
-        photoFile?.let {
+        imageFile.let {
             imageUri =
                 FileProvider.getUriForFile(requireContext(), "com.example.smartlab.provider", it)
             if (requireContext().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {

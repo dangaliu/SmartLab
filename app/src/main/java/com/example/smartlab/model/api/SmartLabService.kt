@@ -5,11 +5,9 @@ import com.example.smartlab.model.api.responseModels.CreateProfileResponse
 import com.example.smartlab.model.api.responseModels.TokenResponse
 import com.example.smartlab.model.dto.CatalogItem
 import com.example.smartlab.model.dto.NewsItem
+import okhttp3.MultipartBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface SmartLabService {
 
@@ -38,5 +36,12 @@ interface SmartLabService {
     suspend fun updateProfile(
         @Header("Authorization") token: String,
         @Body profile: CreateProfileRequest
+    ): Response<Unit>
+
+    @Multipart
+    @POST("api/avatar")
+    suspend fun updateAvatar(
+        @Header("Authorization") token: String,
+        @Part file: MultipartBody.Part
     ): Response<Unit>
 }

@@ -19,14 +19,17 @@
 
         <activity
             android:name=".view.activities.WelcomeActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activities.MainActivity" />
+        <activity
+            android:name=".view.activities.MainActivity"
+            android:windowSoftInputMode="adjustNothing" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
