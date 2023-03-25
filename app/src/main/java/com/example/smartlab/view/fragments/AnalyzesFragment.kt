@@ -44,7 +44,6 @@ class AnalyzesFragment : Fragment() {
         viewModel.getCatalog()
         setObservers()
     }
-
     private fun setListeners() {
         binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {

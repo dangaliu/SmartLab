@@ -17,6 +17,7 @@ import androidx.core.content.FileProvider
 import androidx.core.view.iterator
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
 import com.example.smartlab.R
 import com.example.smartlab.databinding.FragmentPatientCardBinding
 import com.example.smartlab.databinding.FragmentProfileBinding
@@ -195,6 +196,15 @@ class ProfileFragment : Fragment() {
             editProfileBinding?.let {
                 if (uri.toString().isNotBlank()) {
                     it.ivAvatar.setImageURI(uri)
+                }
+            }
+        }
+        viewModel.updatedProfile.observe(viewLifecycleOwner) { updatedProfile ->
+            editProfileBinding?.let {
+                updatedProfile.image?.let { image ->
+                    if (image.isNotBlank()) {
+                        Glide.with(requireContext()).load(image).into(it.ivAvatar)
+                    }
                 }
             }
         }

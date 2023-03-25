@@ -32,11 +32,11 @@ interface SmartLabService {
     @GET("api/catalog")
     suspend fun getCatalog(): Response<List<CatalogItem>>
 
-    @POST("api/updateProfile")
+    @PUT("api/updateProfile")
     suspend fun updateProfile(
         @Header("Authorization") token: String,
         @Body profile: CreateProfileRequest
-    ): Response<Unit>
+    ): Response<CreateProfileResponse>
 
     @Multipart
     @POST("api/avatar")

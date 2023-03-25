@@ -20,8 +20,11 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
     private val _patientCard: MutableLiveData<CreateProfileRequest?> = MutableLiveData()
     val patientCard: LiveData<CreateProfileRequest?> = _patientCard
 
-    private val _createProfileStatus: MutableLiveData<CreateProfileResponse> = MutableLiveData()
-    val createProfileStatus: LiveData<CreateProfileResponse> = _createProfileStatus
+    private val _createdProfile: MutableLiveData<CreateProfileResponse> = MutableLiveData()
+    val createdProfile: LiveData<CreateProfileResponse> = _createdProfile
+
+    private val _updatedProfile: MutableLiveData<CreateProfileResponse> = MutableLiveData()
+    val updatedProfile: LiveData<CreateProfileResponse> = _updatedProfile
 
     private val _avatarUri: MutableLiveData<Uri> = MutableLiveData()
     val avatarUri: LiveData<Uri> = _avatarUri
@@ -73,7 +76,7 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             val response = SmartLabClient.retrofit.createProfile("Bearer $token", profile)
             if (response.isSuccessful) {
-                _createProfileStatus.value = response.body()
+                _createdProfile.value = response.body()
             }
         }
     }
@@ -83,6 +86,10 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
             val response = SmartLabClient.retrofit.updateProfile("Bearer $token", profile)
             if (response.isSuccessful) {
                 Log.d(TAG, "updateProfile: success")
+                if (response.body() != null) {
+                    _updatedProfile.value = response.body()!!
+                    Log.d(TAG, "updateProfile: ${response.body()!!}")
+                }
             } else {
                 Log.d(TAG, "updateProfile: error ${response.message()}")
             }
@@ -92,6 +99,11 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
     fun updateAvatar(avatar: MultipartBody.Part) {
         viewModelScope.launch {
             val response = SmartLabClient.retrofit.updateAvatar("Bearer $token", avatar)
+            if (response.isSuccessful) {
+                _patientCard.value?.let {
+                    updateProfile(it)
+                }
+            }
             Log.d(TAG, "updateAvatar: ${response.code()}")
         }
     }
