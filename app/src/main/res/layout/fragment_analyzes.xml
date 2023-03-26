@@ -48,11 +48,32 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/searchResultsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:orientation="vertical">
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    app:dividerColor="#F4F4F4" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSearchResults"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    tools:listitem="@layout/item_search" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mainContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/mainContainer"
                 android:layout_marginTop="104dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:visibility="gone">
 
                 <TextView
                     android:id="@+id/tvNews"
