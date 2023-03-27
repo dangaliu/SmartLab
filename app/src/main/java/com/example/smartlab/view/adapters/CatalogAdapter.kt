@@ -10,7 +10,8 @@ import com.example.smartlab.model.dto.CatalogItem
 class CatalogAdapter(
     private val context: Context,
     var catalog: List<CatalogItem>,
-    var onAddButtonClickListener: (CatalogItem) -> Unit = {}
+    var onAddButtonClickListener: (CatalogItem) -> Unit = {},
+    val onCardClickListener: (CatalogItem) -> Unit = {}
 ) : RecyclerView.Adapter<CatalogAdapter.NewsViewHolder>() {
 
     inner class NewsViewHolder(val binding: ItemCatalogBinding) :
@@ -34,6 +35,9 @@ class CatalogAdapter(
             tvPrice.text = "${item.price} ₽"
             btnAdd.setOnClickListener {
                 onAddButtonClickListener(item)
+            }
+            root.setOnClickListener {
+                onCardClickListener(item)
             }
         }
     }

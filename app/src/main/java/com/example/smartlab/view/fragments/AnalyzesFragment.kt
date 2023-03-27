@@ -12,12 +12,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.smartlab.R
+import com.example.smartlab.databinding.BottomSheetDialogAnalyzItemBinding
 import com.example.smartlab.databinding.ChipItemBinding
 import com.example.smartlab.databinding.FragmentAnalyzesBinding
+import com.example.smartlab.model.dto.CatalogItem
 import com.example.smartlab.view.adapters.CatalogAdapter
 import com.example.smartlab.view.adapters.NewsAdapter
 import com.example.smartlab.view.adapters.SearchAdapter
 import com.example.smartlab.viewmodel.AnalyzesViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -63,14 +68,16 @@ class AnalyzesFragment : Fragment() {
                         start: Int,
                         count: Int,
                         after: Int
-                    ) {}
+                    ) {
+                    }
 
                     override fun onTextChanged(
                         s: CharSequence?,
                         start: Int,
                         before: Int,
                         count: Int
-                    ) {}
+                    ) {
+                    }
 
                     override fun afterTextChanged(s: Editable?) {
                         if (s.toString().length >= 3) {
@@ -125,6 +132,13 @@ class AnalyzesFragment : Fragment() {
         }
     }
 
+    private fun showAnalyzItemBottomSheetDialog(analyzItem: CatalogItem) {
+        val analyzItemBinding = BottomSheetDialogAnalyzItemBinding.inflate(layoutInflater)
+        val analyzItemDialog = BottomSheetDialog(requireContext(), R.style.AppBottomSheet)
+        analyzItemDialog.setContentView(analyzItemBinding.root)
+        analyzItemDialog.show()
+    }
+
     private fun initSearchRecyclerView() {
         searchAdapter = SearchAdapter(requireContext(), listOf())
         binding.rvSearchResults.apply {
@@ -140,7 +154,12 @@ class AnalyzesFragment : Fragment() {
     }
 
     private fun initCatalogRecyclerView() {
-        catalogAdapter = CatalogAdapter(requireContext(), listOf())
+        catalogAdapter = CatalogAdapter(
+            requireContext(), listOf(),
+            onCardClickListener = {
+                showAnalyzItemBottomSheetDialog(it)
+            }
+        )
         binding.rvCatalog.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = catalogAdapter
