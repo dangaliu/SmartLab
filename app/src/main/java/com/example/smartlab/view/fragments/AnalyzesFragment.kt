@@ -62,7 +62,7 @@ class AnalyzesFragment : Fragment() {
         binding.etSearch.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) {
                 binding.tvCancel.visibility = View.VISIBLE
-                binding.mainContainer.visibility = View.GONE
+                binding.mainContainer.visibility = View.INVISIBLE
                 binding.searchResultsContainer.visibility = View.VISIBLE
                 binding.etSearch.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
@@ -129,9 +129,22 @@ class AnalyzesFragment : Fragment() {
                 }
             }
         }
-        viewModel.dbCatalog.observe(viewLifecycleOwner) {
-            Log.d(TAG, "setObservers: dbCatalog $it")
-            catalogAdapter.updateItems(it)
+        viewModel.dbCatalog.observe(viewLifecycleOwner) { dbCatalog ->
+            Log.d(TAG, "setObservers: dbCatalog $dbCatalog")
+            var cartItemPrice = 0
+            val cartItems = dbCatalog.filter { item -> item.isInCard }
+            cartItems.forEach {
+                cartItemPrice += it.price.trimEnd(' ', '₽').toInt()
+            }
+            viewModel.cartTotalPrice.value = cartItemPrice
+            catalogAdapter.updateItems(dbCatalog)
+        }
+        viewModel.cartTotalPrice.observe(viewLifecycleOwner) {
+            binding.goToCartContainer.visibility = View.GONE
+            if (it > 0) {
+                binding.goToCartContainer.visibility = View.VISIBLE
+                binding.tvCartPrice.text = "$it ₽"
+            }
         }
     }
 

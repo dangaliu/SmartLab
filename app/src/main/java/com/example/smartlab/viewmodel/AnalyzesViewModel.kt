@@ -27,6 +27,8 @@ class AnalyzesViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val dbCatalog: LiveData<List<CatalogItem>> = db.getDao().getAllAnalyzes()
 
+    var cartTotalPrice: MutableLiveData<Int> = MutableLiveData()
+
 
     fun getNews() {
         viewModelScope.launch {
