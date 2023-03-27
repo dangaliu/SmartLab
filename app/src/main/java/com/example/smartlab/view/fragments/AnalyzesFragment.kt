@@ -141,7 +141,7 @@ class AnalyzesFragment : Fragment() {
             tvTimerResult.text = analyzItem.time_result
             tvBio.text = analyzItem.bio
             btnAdd.text = "${analyzItem.price} ₽"
-            btnAdd.setOnClickListener { analyzItemDialog.dismiss() }
+            ivClose.setOnClickListener { analyzItemDialog.cancel() }
         }
         analyzItemDialog.setContentView(analyzItemBinding.root)
         analyzItemDialog.show()
