@@ -21,7 +21,6 @@ import com.example.smartlab.view.adapters.CatalogAdapter
 import com.example.smartlab.view.adapters.NewsAdapter
 import com.example.smartlab.view.adapters.SearchAdapter
 import com.example.smartlab.viewmodel.AnalyzesViewModel
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -135,6 +134,15 @@ class AnalyzesFragment : Fragment() {
     private fun showAnalyzItemBottomSheetDialog(analyzItem: CatalogItem) {
         val analyzItemBinding = BottomSheetDialogAnalyzItemBinding.inflate(layoutInflater)
         val analyzItemDialog = BottomSheetDialog(requireContext(), R.style.AppBottomSheet)
+        analyzItemBinding.apply {
+            tvTitle.text = analyzItem.name
+            tvDescription.text = analyzItem.description
+            tvPreparation.text = analyzItem.preparation
+            tvTimerResult.text = analyzItem.time_result
+            tvBio.text = analyzItem.bio
+            btnAdd.text = "${analyzItem.price} ₽"
+            btnAdd.setOnClickListener { analyzItemDialog.dismiss() }
+        }
         analyzItemDialog.setContentView(analyzItemBinding.root)
         analyzItemDialog.show()
     }
