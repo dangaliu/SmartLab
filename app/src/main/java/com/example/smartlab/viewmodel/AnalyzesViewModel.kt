@@ -1,15 +1,18 @@
 package com.example.smartlab.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.smartlab.model.api.SmartLabClient
 import com.example.smartlab.model.dto.CatalogItem
 import com.example.smartlab.model.dto.NewsItem
+import com.example.smartlab.model.room.SmartlabDatabase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AnalyzesViewModel : ViewModel() {
+class AnalyzesViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val _news: MutableLiveData<List<NewsItem>> = MutableLiveData()
     val news: LiveData<List<NewsItem>> = _news
@@ -17,8 +20,13 @@ class AnalyzesViewModel : ViewModel() {
     private val _categories: MutableLiveData<HashSet<String>> = MutableLiveData()
     val categories: LiveData<HashSet<String>> = _categories
 
+    private val db = SmartlabDatabase.getDb(app)
+
     private val _catalog: MutableLiveData<List<CatalogItem>> = MutableLiveData()
     val catalog: LiveData<List<CatalogItem>> = _catalog
+
+    val dbCatalog: LiveData<List<CatalogItem>> = db.getDao().getAllAnalyzes()
+
 
     fun getNews() {
         viewModelScope.launch {
@@ -28,6 +36,20 @@ class AnalyzesViewModel : ViewModel() {
                     _news.value = response.body()
                 }
             }
+        }
+    }
+
+    fun fillDatabase(items: List<CatalogItem>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            items.forEach {
+                db.getDao().addAnalyzeToCart(it)
+            }
+        }
+    }
+
+    fun updateCatalogItem(item: CatalogItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            db.getDao().updateAnalyze(item)
         }
     }
 

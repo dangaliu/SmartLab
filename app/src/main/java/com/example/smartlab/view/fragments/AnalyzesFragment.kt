@@ -3,6 +3,7 @@ package com.example.smartlab.view.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,6 +34,8 @@ class AnalyzesFragment : Fragment() {
     private lateinit var newsAdapter: NewsAdapter
     private lateinit var catalogAdapter: CatalogAdapter
     private lateinit var searchAdapter: SearchAdapter
+
+    private val TAG = this::class.java.simpleName
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -107,7 +110,13 @@ class AnalyzesFragment : Fragment() {
             newsAdapter.updateItems(it)
         }
         viewModel.catalog.observe(viewLifecycleOwner) {
-            catalogAdapter.updateItems(it)
+            viewModel.dbCatalog.value?.let { catalogDb ->
+                if (catalogDb.isEmpty()) {
+                    viewModel.fillDatabase(it)
+                    catalogAdapter.updateItems(it)
+                }
+            }
+
         }
         viewModel.categories.observe(viewLifecycleOwner) { categories ->
             if (binding.chipGroup.isEmpty()) {
@@ -119,6 +128,10 @@ class AnalyzesFragment : Fragment() {
                     })
                 }
             }
+        }
+        viewModel.dbCatalog.observe(viewLifecycleOwner) {
+            Log.d(TAG, "setObservers: dbCatalog $it")
+            catalogAdapter.updateItems(it)
         }
     }
 
@@ -166,6 +179,9 @@ class AnalyzesFragment : Fragment() {
             requireContext(), listOf(),
             onCardClickListener = {
                 showAnalyzItemBottomSheetDialog(it)
+            },
+            onAddButtonClickListener = {
+                viewModel.updateCatalogItem(it.copy(isInCard = !it.isInCard))
             }
         )
         binding.rvCatalog.apply {

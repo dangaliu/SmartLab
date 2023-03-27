@@ -1,6 +1,11 @@
 package com.example.smartlab.model.dto
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "analyzes")
 data class CatalogItem(
+    @PrimaryKey
     val id: String,
     val name: String,
     val description: String,
@@ -8,5 +13,8 @@ data class CatalogItem(
     val category: String,
     val time_result: String,
     val preparation: String,
-    val bio: String
+    val bio: String,
+    var isInCard: Boolean = false,
+    var totalPrice: Int = 0,
+    var count: Int = 0
 )

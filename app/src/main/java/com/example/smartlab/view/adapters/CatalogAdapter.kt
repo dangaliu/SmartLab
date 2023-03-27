@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.smartlab.R
 import com.example.smartlab.databinding.ItemCatalogBinding
 import com.example.smartlab.model.dto.CatalogItem
 
@@ -33,9 +34,22 @@ class CatalogAdapter(
             tvName.text = item.name
             tvTimeResult.text = item.time_result
             tvPrice.text = "${item.price} ₽"
-            btnAdd.setOnClickListener {
-                onAddButtonClickListener(item)
+            btnAdd.apply {
+                setOnClickListener {
+                    onAddButtonClickListener(item)
+                }
+                if (item.isInCard) {
+                    text = "Убрать"
+                    setBackgroundColor(resources.getColor(R.color.white, null))
+                    setTextColor(resources.getColor(R.color.accent, null))
+                } else {
+                    text = "Добавить"
+                    setBackgroundColor(resources.getColor(R.color.accent, null))
+                    setTextColor(resources.getColor(R.color.white, null))
+                }
+
             }
+
             root.setOnClickListener {
                 onCardClickListener(item)
             }
