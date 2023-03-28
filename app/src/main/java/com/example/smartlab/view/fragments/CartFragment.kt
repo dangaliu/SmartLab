@@ -61,13 +61,18 @@ class CartFragment : Fragment() {
     private fun updateTotalPrice(cartItems: List<CatalogItem>) {
         var totalPrice = 0
         cartItems.forEach {
-            totalPrice += it.price.toInt()
+            totalPrice += it.price.toInt() * it.patientCount
         }
         binding.tvTotalPrice.text = "$totalPrice ₽"
     }
 
     private fun initCartRecyclerView() {
-        cartAdapter = CartAdapter(requireContext(), listOf())
+        cartAdapter = CartAdapter(
+            requireContext(), listOf(),
+            onMinusClickListener = { viewModel.onMinusClick(it) },
+            onPlusClickListener = { viewModel.onPlusClick(it) },
+            onDeleteClickListener = { viewModel.deleteFromCart(it) }
+        )
         binding.rvCartItems.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = cartAdapter

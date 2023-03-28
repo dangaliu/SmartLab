@@ -22,4 +22,22 @@ class CartViewModel(private val app: Application) : AndroidViewModel(app) {
             }
         }
     }
+
+    fun onPlusClick(item: CatalogItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            db.getDao().updateAnalyze(item.copy(patientCount = item.patientCount + 1))
+        }
+    }
+
+    fun onMinusClick(item: CatalogItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            db.getDao().updateAnalyze(item.copy(patientCount = item.patientCount - 1))
+        }
+    }
+
+    fun deleteFromCart(item: CatalogItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            db.getDao().updateAnalyze(item.copy(isInCard = false))
+        }
+    }
 }

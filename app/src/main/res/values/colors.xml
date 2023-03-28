@@ -10,4 +10,7 @@
 
     <color name="accent">#1A6FEE</color>
     <color name="accent_inactive">#C9D4FB</color>
+
+    <color name="minus_inactive">#B8C1CC</color>
+    <color name="minus_active">#939396</color>
 </resources>
