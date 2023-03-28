@@ -4,12 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.smartlab.model.api.SmartLabClient
-import com.example.smartlab.utils.DataStore
+import com.example.smartlab.utils.DataManager
 import com.example.smartlab.utils.SaveStatus
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val app: Application): AndroidViewModel(app) {
@@ -35,7 +33,7 @@ class LoginViewModel(private val app: Application): AndroidViewModel(app) {
 
     fun saveEmail(email: String) {
         viewModelScope.launch {
-            DataStore.saveEmail(app, email).collect {
+            DataManager.saveEmail(app, email).collect {
                 _saveEmailStatus.value = it
             }
         }

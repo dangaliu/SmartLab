@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.smartlab.model.api.SmartLabClient
-import com.example.smartlab.utils.DataStore
+import com.example.smartlab.utils.DataManager
 import com.example.smartlab.utils.SaveStatus
 import kotlinx.coroutines.launch
 
@@ -33,9 +33,8 @@ class EmailCodeViewModel(private val app: Application) : AndroidViewModel(app) {
             if (response.isSuccessful) {
                 response.body()?.let { tokenResponse ->
                     Log.d(TAG, "signIn: token: ${tokenResponse.token}")
-                    DataStore.saveToken(app, tokenResponse.token).collect { saveStatus ->
-                        _signInStatus.value = saveStatus
-                    }
+                    DataManager.encryptToken(tokenResponse.token)
+                    _signInStatus.value = SaveStatus.SUCCESS
                 }
             }
         }
@@ -63,7 +62,7 @@ class EmailCodeViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun getEmail() {
         viewModelScope.launch {
-            DataStore.getEmail(app).collect {
+            DataManager.getEmail(app).collect {
                 _email.value = it
             }
         }

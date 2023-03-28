@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.smartlab.model.api.SmartLabClient
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
 import com.example.smartlab.model.api.responseModels.CreateProfileResponse
-import com.example.smartlab.utils.DataStore
+import com.example.smartlab.utils.DataManager
 import kotlinx.coroutines.launch
 
 class CreatePatientCardViewModel(private val app: Application) : AndroidViewModel(app) {
@@ -22,11 +22,7 @@ class CreatePatientCardViewModel(private val app: Application) : AndroidViewMode
     private var token: String = ""
 
     init {
-        viewModelScope.launch {
-            DataStore.getToken(app).collect {
-                token = it
-            }
-        }
+        token = DataManager.decryptToken()
     }
 
 
@@ -41,7 +37,7 @@ class CreatePatientCardViewModel(private val app: Application) : AndroidViewMode
 
     fun setCreatePatientCardPassed() {
         viewModelScope.launch {
-            DataStore.saveCreatePatientCardPassed(app).collect {
+            DataManager.saveCreatePatientCardPassed(app).collect {
                 Log.d(TAG, "setCreatePatientCardPassed: $it")
             }
         }
@@ -49,7 +45,7 @@ class CreatePatientCardViewModel(private val app: Application) : AndroidViewMode
 
     fun savePatientCard(patientCard: CreateProfileRequest) {
         viewModelScope.launch {
-            DataStore.savePatientCard(app, patientCard)
+            DataManager.savePatientCard(app, patientCard)
         }
     }
 }

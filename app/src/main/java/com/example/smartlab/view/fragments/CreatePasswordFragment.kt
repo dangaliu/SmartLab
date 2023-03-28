@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.smartlab.R
 import com.example.smartlab.databinding.FragmentCreatePasswordBinding
+import com.example.smartlab.utils.DataManager
 
 class CreatePasswordFragment : Fragment() {
 
@@ -43,6 +44,10 @@ class CreatePasswordFragment : Fragment() {
                         code.append(child.text)
                         updatePasswordIndicators(code.length)
                         Log.d(TAG, "setListeners: code - $code")
+                        if (code.length == 4) {
+                            DataManager.encryptPassword(code.toString())
+                            findNavController().navigate(R.id.action_createPasswordFragment_to_patientCardFragment)
+                        }
                     }
                 }
             }
@@ -63,7 +68,7 @@ class CreatePasswordFragment : Fragment() {
 
     private fun updatePasswordIndicators(codeLength: Int) {
         clearIndicators()
-        when(codeLength) {
+        when (codeLength) {
             1 -> {
                 binding.ivPassword1.setImageResource(R.drawable.selected_indicator)
             }

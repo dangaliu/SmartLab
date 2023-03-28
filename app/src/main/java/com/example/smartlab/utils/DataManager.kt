@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -11,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-object DataStore {
+object DataManager {
     val IS_ONBOARDING_PASSED = booleanPreferencesKey("isOnboardingPassed")
     val TOKEN = stringPreferencesKey("token")
     val EMAIL = stringPreferencesKey("email")
@@ -19,6 +21,36 @@ object DataStore {
     val AVATAR_URI = stringPreferencesKey("avatarUri")
 
     val PATIENT_CARD = stringPreferencesKey("patientCard")
+
+    private lateinit var masterKey: MasterKey
+    private lateinit var sharedPreferences: EncryptedSharedPreferences
+
+    fun initEncryptedSharedPrefs(context: Context) {
+        masterKey = MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
+        sharedPreferences = EncryptedSharedPreferences.create(
+            context,
+            "smartLabPrefs",
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        ) as EncryptedSharedPreferences
+    }
+
+    fun encryptToken(token: String) {
+        sharedPreferences.edit().putString("token", token).apply()
+    }
+
+    fun encryptPassword(password: String) {
+        sharedPreferences.edit().putString("password", password).apply()
+    }
+
+    fun decryptToken(): String {
+        return sharedPreferences.getString("token", "") ?: ""
+    }
+
+    fun decryptPassword(): String {
+        return sharedPreferences.getString("password", "") ?: ""
+    }
 
     suspend fun saveAvatarUri(
         context: Context,
@@ -52,24 +84,6 @@ object DataStore {
             Gson().fromJson(it[PATIENT_CARD] ?: "{}", CreateProfileRequest::class.java)
         }
         return patientCardJsonFlow
-    }
-
-
-    suspend fun saveToken(context: Context, token: String): Flow<SaveStatus> {
-        return flow {
-            context.dataStore.edit {
-                it[TOKEN] = token
-                emit(SaveStatus.SUCCESS)
-            }
-        }
-
-    }
-
-    fun getToken(context: Context): Flow<String> {
-        val token = context.dataStore.data.map {
-            it[TOKEN] ?: ""
-        }
-        return token
     }
 
     suspend fun saveEmail(context: Context, email: String): Flow<SaveStatus> {

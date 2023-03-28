@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.smartlab.model.api.SmartLabClient
 import com.example.smartlab.model.api.requestModels.CreateProfileRequest
 import com.example.smartlab.model.api.responseModels.CreateProfileResponse
-import com.example.smartlab.utils.DataStore
+import com.example.smartlab.utils.DataManager
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 
@@ -34,24 +34,20 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
     private var token: String = ""
 
     init {
-        viewModelScope.launch {
-            DataStore.getToken(app).collect {
-                token = it
-            }
-        }
+        token = DataManager.decryptToken()
     }
 
     var isEditMode = false
 
     fun saveAvatarUri(avatarUri: Uri) {
         viewModelScope.launch {
-            DataStore.saveAvatarUri(app, avatarUri.toString())
+            DataManager.saveAvatarUri(app, avatarUri.toString())
         }
     }
 
     fun getAvatarUri() {
         viewModelScope.launch {
-            DataStore.getAvatarUri(app).collect {
+            DataManager.getAvatarUri(app).collect {
                 _avatarUri.value = it.toUri()
             }
         }
@@ -59,7 +55,7 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun getPatientCard() {
         viewModelScope.launch {
-            DataStore.getPatientCard(app).collect {
+            DataManager.getPatientCard(app).collect {
                 _patientCard.value = it
             }
         }
@@ -68,7 +64,7 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun savePatientCard(patientCard: CreateProfileRequest) {
         viewModelScope.launch {
-            DataStore.savePatientCard(app, patientCard)
+            DataManager.savePatientCard(app, patientCard)
         }
     }
 
