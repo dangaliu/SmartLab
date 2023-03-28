@@ -32,7 +32,7 @@ class CartAdapter(
         with(holder.binding) {
             tvTitle.text = item.name
             tvPrice.text = "${item.price} ₽"
-            tvPatientCount.text = showPatientCount(item.count)
+            tvPatientCount.text = showPatientCount(item.patientCount)
         }
     }
 

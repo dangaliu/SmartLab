@@ -18,8 +18,4 @@ interface SmartLabDao {
 
     @Delete
     fun deleteAnaylyzeFromCard(item: CatalogItem)
-
-    @Query("delete from analyzes")
-    fun clearAll()
-
 }

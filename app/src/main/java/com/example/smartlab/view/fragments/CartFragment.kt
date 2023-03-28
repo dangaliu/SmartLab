@@ -1,5 +1,6 @@
 package com.example.smartlab.view.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.smartlab.databinding.FragmentCartBinding
+import com.example.smartlab.model.dto.CatalogItem
 import com.example.smartlab.view.adapters.CartAdapter
 import com.example.smartlab.viewmodel.CartViewModel
 
@@ -39,13 +41,29 @@ class CartFragment : Fragment() {
         binding.ivBtnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+        binding.ivClearAll.setOnClickListener {
+            viewModel.clearAll()
+        }
     }
 
     private fun setObservers() {
         viewModel.items.observe(viewLifecycleOwner) { items ->
-            val cartItems = items.filter { it.isInCard }
-            cartAdapter.updateItems(cartItems)
+            viewModel.cartItems = items.filter { it.isInCard }
+            viewModel.cartItems.forEach {
+                if (it.patientCount == 0) it.patientCount = 1
+            }
+            updateTotalPrice(viewModel.cartItems)
+            cartAdapter.updateItems(viewModel.cartItems)
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateTotalPrice(cartItems: List<CatalogItem>) {
+        var totalPrice = 0
+        cartItems.forEach {
+            totalPrice += it.price.toInt()
+        }
+        binding.tvTotalPrice.text = "$totalPrice ₽"
     }
 
     private fun initCartRecyclerView() {
