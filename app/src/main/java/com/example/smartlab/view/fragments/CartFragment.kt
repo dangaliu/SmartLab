@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.smartlab.R
 import com.example.smartlab.databinding.FragmentCartBinding
 import com.example.smartlab.model.dto.CatalogItem
 import com.example.smartlab.view.adapters.CartAdapter
@@ -43,6 +44,9 @@ class CartFragment : Fragment() {
         }
         binding.ivClearAll.setOnClickListener {
             viewModel.clearAll()
+        }
+        binding.btnGoToOrder.setOnClickListener {
+            findNavController().navigate(R.id.action_cartFragment_to_orderFragment)
         }
     }
 

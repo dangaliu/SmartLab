@@ -89,6 +89,7 @@
             android:layout_marginBottom="32dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:id="@+id/btnGoToOrder"
             android:text="Перейти к оформлению заказа"
             android:textAllCaps="false"
             android:textSize="17sp"

@@ -80,6 +80,7 @@ dependencies {
     // Gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
+    // Шифрование данных
     implementation "androidx.security:security-crypto:1.1.0-alpha05"
 
     // Room
