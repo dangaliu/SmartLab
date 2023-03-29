@@ -30,13 +30,9 @@ class OrderFragment : Fragment() {
             TimePickerDialog(
                 requireContext(),
                 { view, hourOfDay, minute ->
-                    val sdf = SimpleDateFormat("hh:mm", Locale("ru"))
-                    binding.tvDateTime.text = " ${binding.tvDateTime.text} ${
-                        sdf.format(Calendar.getInstance().apply {
-                            set(Calendar.HOUR, hourOfDay)
-                            set(Calendar.MINUTE, minute)
-                        }.time)
-                    }"
+                    val myHour = if (hourOfDay >= 10) hourOfDay else "0$hourOfDay"
+                    val myMinute = if (minute >= 10) minute else "0$minute"
+                    binding.tvDateTime.text = " ${binding.tvDateTime.text} $myHour:$myMinute"
                 },
                 calendar.get(Calendar.HOUR),
                 calendar.get(Calendar.MINUTE),
