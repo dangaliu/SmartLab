@@ -10,7 +10,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.smartlab.R
+import com.example.smartlab.databinding.BottomSheetAddressBinding
 import com.example.smartlab.databinding.FragmentOrderBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -57,16 +60,17 @@ class OrderFragment : Fragment() {
     private fun setListeners() {
         binding.ivBtnBack.setOnClickListener { findNavController().popBackStack() }
         binding.tvDateTime.setOnClickListener {
-            DatePickerDialog(
-                requireContext(),
-                R.style.ColorPickerTheme,
-                dateSetListener,
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            ).apply {
-                datePicker.minDate = System.currentTimeMillis()
-            }.show()
+//            DatePickerDialog(
+//                requireContext(),
+//                R.style.ColorPickerTheme,
+//                dateSetListener,
+//                calendar.get(Calendar.YEAR),
+//                calendar.get(Calendar.MONTH),
+//                calendar.get(Calendar.DAY_OF_MONTH)
+//            ).apply {
+//                datePicker.minDate = System.currentTimeMillis()
+//            }.show()
+            showSelectAddressBottomSheetDialog()
         }
     }
 
@@ -91,5 +95,13 @@ class OrderFragment : Fragment() {
             }
         val sdf = SimpleDateFormat(myFormat, Locale("ru"))
         binding.tvDateTime.text = "$prefix${sdf.format(calendar.time)}"
+    }
+
+    private fun showSelectAddressBottomSheetDialog() {
+        val selectAddressDialog = BottomSheetDialog(requireContext(), R.style.AppBottomSheet)
+        val selectAddressDialogBinding = BottomSheetAddressBinding.inflate(layoutInflater)
+        selectAddressDialog.setContentView(selectAddressDialogBinding.root)
+        selectAddressDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        selectAddressDialog.show()
     }
 }
