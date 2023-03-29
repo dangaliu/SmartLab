@@ -271,5 +271,4 @@
                 app:rippleColor="#33FFFFFF" />
         </FrameLayout>
     </LinearLayout>
-
 </androidx.core.widget.NestedScrollView>
