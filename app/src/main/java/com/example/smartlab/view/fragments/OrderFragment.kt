@@ -45,6 +45,8 @@ class OrderFragment : Fragment() {
         LocationListener {
             viewModel.currentLocation.value = it
             Log.d(TAG, "showSelectAddressBottomSheetDialog: ${viewModel.currentLocation.value}")
+            Log.d(TAG, "showSelectAddressBottomSheetDialog: ${viewModel.currentLocation.value?.latitude}")
+            Log.d(TAG, "showSelectAddressBottomSheetDialog: ${viewModel.currentLocation.value?.longitude}")
         }
 
     private var selectAddressDialogBinding: BottomSheetAddressBinding? = null
