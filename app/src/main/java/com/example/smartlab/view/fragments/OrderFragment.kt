@@ -3,10 +3,13 @@ package com.example.smartlab.view.fragments
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.smartlab.R
@@ -23,6 +26,8 @@ class OrderFragment : Fragment() {
     private lateinit var binding: FragmentOrderBinding
     private val calendar = Calendar.getInstance()
 
+    private val locationPermissionRequestLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
     private val TAG = this::class.java.simpleName
     val dateSetListener: DatePickerDialog.OnDateSetListener by lazy {
         DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
@@ -53,23 +58,14 @@ class OrderFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isLocationPermissionGranted()
         Locale.setDefault(Locale("ru"))
         setListeners()
     }
 
     private fun setListeners() {
         binding.ivBtnBack.setOnClickListener { findNavController().popBackStack() }
-        binding.tvDateTime.setOnClickListener {
-//            DatePickerDialog(
-//                requireContext(),
-//                R.style.ColorPickerTheme,
-//                dateSetListener,
-//                calendar.get(Calendar.YEAR),
-//                calendar.get(Calendar.MONTH),
-//                calendar.get(Calendar.DAY_OF_MONTH)
-//            ).apply {
-//                datePicker.minDate = System.currentTimeMillis()
-//            }.show()
+        binding.tvAddress.setOnClickListener {
             showSelectAddressBottomSheetDialog()
         }
     }
@@ -103,5 +99,18 @@ class OrderFragment : Fragment() {
         selectAddressDialog.setContentView(selectAddressDialogBinding.root)
         selectAddressDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         selectAddressDialog.show()
+    }
+
+    private fun isLocationPermissionGranted(): Boolean {
+        return if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            true
+        } else {
+            locationPermissionRequestLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            true
+        }
     }
 }
