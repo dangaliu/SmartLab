@@ -2,7 +2,6 @@ package com.example.smartlab.view.fragments
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -22,6 +21,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.smartlab.R
 import com.example.smartlab.databinding.BottomSheetAddressBinding
+import com.example.smartlab.databinding.BottomSheetDateTimeBinding
 import com.example.smartlab.databinding.FragmentOrderBinding
 import com.example.smartlab.viewmodel.OrderViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -45,6 +45,8 @@ class OrderFragment : Fragment() {
 
     private var speechStartTime by Delegates.notNull<Long>()
     private var speechEndTime by Delegates.notNull<Long>()
+
+    var selectTimeDialogBinding: BottomSheetDateTimeBinding? = null
 
     private fun startVoiceInput() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -108,23 +110,12 @@ class OrderFragment : Fragment() {
     private val locationPermissionRequestLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {}
     private val TAG = this::class.java.simpleName
-    val dateSetListener: DatePickerDialog.OnDateSetListener by lazy {
+    private val dateSetListener: DatePickerDialog.OnDateSetListener by lazy {
         DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             calendar.set(Calendar.MONTH, month)
             calendar.set(Calendar.YEAR, year)
             updateDateTime()
-            TimePickerDialog(
-                requireContext(),
-                { view, hourOfDay, minute ->
-                    val myHour = if (hourOfDay >= 10) hourOfDay else "0$hourOfDay"
-                    val myMinute = if (minute >= 10) minute else "0$minute"
-                    binding.tvDateTime.text = " ${binding.tvDateTime.text} $myHour:$myMinute"
-                },
-                calendar.get(Calendar.HOUR),
-                calendar.get(Calendar.MINUTE),
-                true
-            ).show()
         }
     }
 
@@ -180,6 +171,9 @@ class OrderFragment : Fragment() {
             startVoiceInput()
             speechStartTime = System.currentTimeMillis()
         }
+        binding.tvDateTime.setOnClickListener {
+            showSelectTimeBottomSheetDialog()
+        }
     }
 
     private fun setObservers() {
@@ -208,7 +202,9 @@ class OrderFragment : Fragment() {
                 "dd MMMM yyyy"
             }
         val sdf = SimpleDateFormat(myFormat, Locale("ru"))
-        binding.tvDateTime.text = "$prefix${sdf.format(calendar.time)}"
+        selectTimeDialogBinding?.let {
+            it.tvDateTime.text = sdf.format(calendar.time)
+        }
     }
 
     private fun showSelectAddressBottomSheetDialog() {
@@ -217,6 +213,40 @@ class OrderFragment : Fragment() {
         selectAddressDialog.setContentView(selectAddressDialogBinding!!.root)
         selectAddressDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         selectAddressDialog.show()
+    }
+
+    private fun showSelectTimeBottomSheetDialog() {
+        val selectTimeDialog = BottomSheetDialog(requireContext(), R.style.AppBottomSheet)
+        selectTimeDialogBinding = BottomSheetDateTimeBinding.inflate(layoutInflater)
+        selectTimeDialogBinding!!.ivClose.setOnClickListener {
+            selectTimeDialog.cancel()
+        }
+        selectTimeDialogBinding!!.btnConfirm.setOnClickListener {
+            if (selectTimeDialogBinding!!.timeChipGroup.checkedChipId == -1) {
+                Toast.makeText(requireContext(), "Выберите время заказа!", Toast.LENGTH_SHORT)
+                    .show()
+                return@setOnClickListener
+            }
+            if (selectTimeDialogBinding!!.tvDateTime.text.isBlank()) {
+                Toast.makeText(requireContext(), "Выберите дату заказа!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            selectTimeDialog.cancel()
+        }
+        selectTimeDialogBinding!!.tvDateTime.setOnClickListener {
+            DatePickerDialog(
+                requireContext(),
+                dateSetListener,
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).apply {
+                datePicker.minDate = System.currentTimeMillis()
+            }.show()
+        }
+        selectTimeDialog.setContentView(selectTimeDialogBinding!!.root)
+        selectTimeDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        selectTimeDialog.show()
     }
 
     private fun isLocationPermissionGranted(): Boolean {
