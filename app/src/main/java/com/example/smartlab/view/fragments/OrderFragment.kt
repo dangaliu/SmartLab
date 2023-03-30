@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
@@ -27,6 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
 import kotlin.properties.Delegates
 
 @SuppressLint("SetTextI18n")
@@ -36,17 +36,27 @@ class OrderFragment : Fragment() {
     private val calendar = Calendar.getInstance()
 
     private val viewModel: OrderViewModel by viewModels()
-
-    private var currentLocation: Location? = null
     private lateinit var locationManager: LocationManager
     private var hasGps by Delegates.notNull<Boolean>()
 
     private val gpsLocationListener: LocationListener =
-        LocationListener {
-            viewModel.currentLocation.value = it
+        LocationListener { location ->
+            viewModel.currentLocation.value = location
+            selectAddressDialogBinding?.let {
+                it.etLatitude.setText(round(location.latitude).toInt().toString())
+                it.etLongitude.setText(round(location.longitude).toInt().toString())
+                it.etHeight.setText(round(location.altitude).toInt().toString())
+                viewModel.reverseGeocoding(lat = location.latitude, lon = location.longitude)
+            }
             Log.d(TAG, "showSelectAddressBottomSheetDialog: ${viewModel.currentLocation.value}")
-            Log.d(TAG, "showSelectAddressBottomSheetDialog: ${viewModel.currentLocation.value?.latitude}")
-            Log.d(TAG, "showSelectAddressBottomSheetDialog: ${viewModel.currentLocation.value?.longitude}")
+            Log.d(
+                TAG,
+                "showSelectAddressBottomSheetDialog: ${viewModel.currentLocation.value?.latitude}"
+            )
+            Log.d(
+                TAG,
+                "showSelectAddressBottomSheetDialog: ${viewModel.currentLocation.value?.longitude}"
+            )
         }
 
     private var selectAddressDialogBinding: BottomSheetAddressBinding? = null
@@ -88,11 +98,12 @@ class OrderFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d(TAG, "onViewCreated: $hasGps")
+        setObservers()
         if (hasGps) {
             if (isLocationPermissionGranted()) {
                 locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
-                    5000,
+                    1000,
                     0f,
                     gpsLocationListener
                 )
@@ -120,6 +131,12 @@ class OrderFragment : Fragment() {
         binding.ivBtnBack.setOnClickListener { findNavController().popBackStack() }
         binding.tvAddress.setOnClickListener {
             showSelectAddressBottomSheetDialog()
+        }
+    }
+
+    private fun setObservers() {
+        viewModel.reversedGeocoding.observe(viewLifecycleOwner) { reversedGeocoging ->
+            selectAddressDialogBinding?.etAddress?.setText("${reversedGeocoging.features[0].properties.address.road} ${reversedGeocoging.features[0].properties.address.house_number}")
         }
     }
 

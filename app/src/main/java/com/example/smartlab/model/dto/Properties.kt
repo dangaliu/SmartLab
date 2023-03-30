@@ -7,7 +7,7 @@ data class Properties(
     val place_rank: Int,
     val category: String,
     val type: String,
-    val importance: Long,
+    val importance: String,
     val addresstype: String,
     val name: String?,
     val display_name: String,
