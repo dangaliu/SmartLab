@@ -4,10 +4,12 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -32,12 +34,52 @@ import kotlin.properties.Delegates
 @SuppressLint("SetTextI18n")
 class OrderFragment : Fragment() {
 
+    private val REQUEST_CODE_SPEECH_INPUT = 100
+
     private lateinit var binding: FragmentOrderBinding
     private val calendar = Calendar.getInstance()
 
     private val viewModel: OrderViewModel by viewModels()
     private lateinit var locationManager: LocationManager
     private var hasGps by Delegates.notNull<Boolean>()
+
+    private var speechStartTime by Delegates.notNull<Long>()
+    private var speechEndTime by Delegates.notNull<Long>()
+
+    private fun startVoiceInput() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        )
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Говорите сейчас!")
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT)
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Ошибка: " + e.message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    // Обрабатываем результат голосового ввода
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQUEST_CODE_SPEECH_INPUT -> {
+                if (data != null) {
+                    speechEndTime = System.currentTimeMillis()
+                    val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    binding.etComment.setText(result.toString().trim('[', ']'))
+                    if (speechEndTime - speechStartTime > 20000) {
+                        Toast.makeText(requireContext(), "Вы превысили 20 секунд", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    // Результаты распознавания речи будут храниться в переменной result.
+                    // Обработайте результат здесь.
+                }
+            }
+        }
+    }
 
     private val gpsLocationListener: LocationListener =
         LocationListener { location ->
@@ -131,6 +173,10 @@ class OrderFragment : Fragment() {
         binding.ivBtnBack.setOnClickListener { findNavController().popBackStack() }
         binding.tvAddress.setOnClickListener {
             showSelectAddressBottomSheetDialog()
+        }
+        binding.ivMic.setOnClickListener {
+            startVoiceInput()
+            speechStartTime = System.currentTimeMillis()
         }
     }
 
