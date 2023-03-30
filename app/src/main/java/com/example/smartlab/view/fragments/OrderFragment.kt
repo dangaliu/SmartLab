@@ -71,11 +71,13 @@ class OrderFragment : Fragment() {
                     val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     binding.etComment.setText(result.toString().trim('[', ']'))
                     if (speechEndTime - speechStartTime > 20000) {
-                        Toast.makeText(requireContext(), "Вы превысили 20 секунд", Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            requireContext(),
+                            "Вы превысили 20 секунд",
+                            Toast.LENGTH_LONG
+                        )
                             .show()
                     }
-                    // Результаты распознавания речи будут храниться в переменной result.
-                    // Обработайте результат здесь.
                 }
             }
         }
