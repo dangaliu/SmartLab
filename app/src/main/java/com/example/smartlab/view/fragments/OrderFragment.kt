@@ -49,42 +49,19 @@ class OrderFragment : Fragment() {
 
     var selectTimeDialogBinding: BottomSheetDateTimeBinding? = null
 
-    private fun startVoiceInput() {
-        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        intent.putExtra(
-            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-        )
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Говорите сейчас!")
-        try {
-            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT)
-        } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Ошибка: " + e.message, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    // Обрабатываем результат голосового ввода
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            REQUEST_CODE_SPEECH_INPUT -> {
-                if (data != null) {
-                    speechEndTime = System.currentTimeMillis()
-                    val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                    binding.etComment.setText(result.toString().trim('[', ']'))
-                    if (speechEndTime - speechStartTime > 20000) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Вы превысили 20 секунд",
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                    }
+    private val getAudio =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.data != null) {
+                speechEndTime = System.currentTimeMillis()
+                val result = it.data!!.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                binding.etComment.setText(result.toString().trim('[', ']'))
+                if (speechEndTime - speechStartTime > 20000) {
+                    Toast.makeText(requireContext(), "Вы превысили 20 секунд", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
-    }
+
 
     private val gpsLocationListener: LocationListener =
         LocationListener { location ->
@@ -177,6 +154,22 @@ class OrderFragment : Fragment() {
         }
     }
 
+    private fun startVoiceInput() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        )
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale("ru-RU"))
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Говорите сейчас!")
+        try {
+            getAudio.launch(intent)
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Ошибка: " + e.message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+
     private fun setObservers() {
         viewModel.reversedGeocoding.observe(viewLifecycleOwner) { reversedGeocoging ->
             selectAddressDialogBinding?.etAddress?.setText("${reversedGeocoging.features[0].properties.address.road} ${reversedGeocoging.features[0].properties.address.house_number}")
@@ -231,8 +224,10 @@ class OrderFragment : Fragment() {
             } else {
                 ""
             }
-            val checkedChip = selectTimeDialogBinding!!.timeChipGroup.findViewById<Chip>(selectTimeDialogBinding!!.timeChipGroup.checkedChipId)
-            binding.tvDateTime.text = "$prefix ${selectTimeDialogBinding!!.tvDateTime.text} ${checkedChip.text}"
+            val checkedChip =
+                selectTimeDialogBinding!!.timeChipGroup.findViewById<Chip>(selectTimeDialogBinding!!.timeChipGroup.checkedChipId)
+            binding.tvDateTime.text =
+                "$prefix ${selectTimeDialogBinding!!.tvDateTime.text} ${checkedChip.text}"
             selectTimeDialog.cancel()
         }
         selectTimeDialogBinding!!.tvDateTime.setOnClickListener {
