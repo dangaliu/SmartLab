@@ -23,6 +23,7 @@ import com.example.smartlab.R
 import com.example.smartlab.databinding.BottomSheetAddressBinding
 import com.example.smartlab.databinding.BottomSheetDateTimeBinding
 import com.example.smartlab.databinding.FragmentOrderBinding
+import com.example.smartlab.model.dto.OrderRequest
 import com.example.smartlab.viewmodel.OrderViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -34,8 +35,6 @@ import kotlin.properties.Delegates
 
 @SuppressLint("SetTextI18n")
 class OrderFragment : Fragment() {
-
-    private val REQUEST_CODE_SPEECH_INPUT = 100
 
     private lateinit var binding: FragmentOrderBinding
     private val calendar = Calendar.getInstance()
@@ -157,6 +156,18 @@ class OrderFragment : Fragment() {
         binding.tvDateTime.setOnClickListener {
             showSelectTimeBottomSheetDialog()
         }
+        binding.btnOrder.setOnClickListener {
+            viewModel.order(
+                OrderRequest(
+                    "asdjhflsadf",
+                    "lasfdlkjas",
+                    "saljkdfjlks",
+                    "lsadkjf",
+                    "laskjdf",
+                    listOf()
+                )
+            )
+        }
     }
 
     private fun startVoiceInput() {
@@ -178,6 +189,9 @@ class OrderFragment : Fragment() {
     private fun setObservers() {
         viewModel.reversedGeocoding.observe(viewLifecycleOwner) { reversedGeocoging ->
             selectAddressDialogBinding?.etAddress?.setText("${reversedGeocoging.features[0].properties.address.road} ${reversedGeocoging.features[0].properties.address.house_number}")
+        }
+        viewModel.orderResponse.observe(viewLifecycleOwner) {
+            Log.d(TAG, "setObservers: $it")
         }
     }
 

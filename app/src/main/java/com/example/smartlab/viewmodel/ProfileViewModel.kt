@@ -35,6 +35,7 @@ class ProfileViewModel(private val app: Application) : AndroidViewModel(app) {
 
     init {
         token = DataManager.decryptToken()
+        Log.d(TAG, "token: $token")
     }
 
     var isEditMode = false

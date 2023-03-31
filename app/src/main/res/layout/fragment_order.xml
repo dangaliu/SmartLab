@@ -263,7 +263,6 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="32dp"
-                android:enabled="false"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:stateListAnimator="@null"
@@ -272,7 +271,7 @@
                 android:textColor="@color/white"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                app:backgroundTint="@color/accent_inactive"
+                app:backgroundTint="@color/accent"
                 app:cornerRadius="10dp"
                 app:rippleColor="#33FFFFFF" />
         </FrameLayout>
