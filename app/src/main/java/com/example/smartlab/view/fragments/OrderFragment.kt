@@ -199,6 +199,16 @@ class OrderFragment : Fragment() {
         selectAddressDialogBinding = BottomSheetAddressBinding.inflate(layoutInflater)
         selectAddressDialog.setContentView(selectAddressDialogBinding!!.root)
         selectAddressDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        selectAddressDialogBinding!!.btnConfirm.setOnClickListener {
+            if (selectAddressDialogBinding!!.etAddress.text.isNotEmpty() && selectAddressDialogBinding!!.etFlat.text.isNotEmpty()) {
+                val resultAddress =
+                    "${selectAddressDialogBinding!!.etAddress.text}, кв. ${selectAddressDialogBinding!!.etFlat.text}"
+                binding.tvAddress.text = resultAddress
+                selectAddressDialog.cancel()
+            } else {
+                Toast.makeText(requireContext(), "Введите адрес!", Toast.LENGTH_SHORT).show()
+            }
+        }
         selectAddressDialog.show()
     }
 
