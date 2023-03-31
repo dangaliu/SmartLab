@@ -191,7 +191,7 @@ class OrderFragment : Fragment() {
             selectAddressDialogBinding?.etAddress?.setText("${reversedGeocoging.features[0].properties.address.road} ${reversedGeocoging.features[0].properties.address.house_number}")
         }
         viewModel.orderResponse.observe(viewLifecycleOwner) {
-            Log.d(TAG, "setObservers: $it")
+            findNavController().navigate(R.id.action_orderFragment_to_waitingFragment)
         }
     }
 
