@@ -182,6 +182,18 @@ class OrderFragment : Fragment() {
     }
 
     private fun updateDateTime() {
+        val prefix = if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.getInstance()
+                .get(Calendar.DAY_OF_MONTH)
+        ) {
+            "Сегодня, "
+        } else if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 1) }
+                .get(Calendar.DAY_OF_MONTH)
+        ) {
+            "Завтра, "
+        } else {
+            ""
+        }
         val myFormat =
             if (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
                 "dd MMMM"
@@ -190,7 +202,7 @@ class OrderFragment : Fragment() {
             }
         val sdf = SimpleDateFormat(myFormat, Locale("ru"))
         selectTimeDialogBinding?.let {
-            it.tvDateTime.text = sdf.format(calendar.time)
+            it.tvDateTime.text = prefix + sdf.format(calendar.time)
         }
     }
 
@@ -242,7 +254,7 @@ class OrderFragment : Fragment() {
             val checkedChip =
                 selectTimeDialogBinding!!.timeChipGroup.findViewById<Chip>(selectTimeDialogBinding!!.timeChipGroup.checkedChipId)
             binding.tvDateTime.text =
-                "$prefix ${selectTimeDialogBinding!!.tvDateTime.text} ${checkedChip.text}"
+                "${selectTimeDialogBinding!!.tvDateTime.text} ${checkedChip.text}"
             selectTimeDialog.cancel()
         }
         selectTimeDialogBinding!!.tvDateTime.setOnClickListener {
