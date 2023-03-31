@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.smartlab.databinding.FragmentWaitingBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class WaitingFragment: Fragment() {
+class WaitingFragment : Fragment() {
 
     private lateinit var binding: FragmentWaitingBinding
 
@@ -18,5 +21,14 @@ class WaitingFragment: Fragment() {
     ): View? {
         binding = FragmentWaitingBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        lifecycleScope.launch {
+            delay(3000)
+            binding.tvWaiting.text = "Производим оплату..."
+            delay(2000)
+        }
     }
 }
