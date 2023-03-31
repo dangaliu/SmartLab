@@ -121,12 +121,6 @@ class OrderFragment : Fragment() {
                     gpsLocationListener
                 )
             }
-        } else {
-            Toast.makeText(
-                requireContext(),
-                "Включите gps на смартфоне, а затем перезапустите приложение",
-                Toast.LENGTH_LONG
-            ).show()
         }
         if (!isLocationPermissionGranted()) {
             locationPermissionRequestLauncher.launch(
@@ -136,13 +130,24 @@ class OrderFragment : Fragment() {
                 )
             )
         }
-        Locale.setDefault(Locale("ru"))
+        Locale.setDefault(Locale("ru-RU"))
         setListeners()
     }
 
+    @SuppressLint("MissingPermission")
     private fun setListeners() {
         binding.ivBtnBack.setOnClickListener { findNavController().popBackStack() }
         binding.tvAddress.setOnClickListener {
+            if (hasGps) {
+                if (isLocationPermissionGranted()) {
+                    locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        1000,
+                        0f,
+                        gpsLocationListener
+                    )
+                }
+            }
             showSelectAddressBottomSheetDialog()
         }
         binding.ivMic.setOnClickListener {
