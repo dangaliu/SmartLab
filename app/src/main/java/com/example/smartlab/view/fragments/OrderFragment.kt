@@ -26,6 +26,7 @@ import com.example.smartlab.databinding.FragmentOrderBinding
 import com.example.smartlab.viewmodel.OrderViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.chip.Chip
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.round
@@ -183,20 +184,8 @@ class OrderFragment : Fragment() {
     }
 
     private fun updateDateTime() {
-        var prefix = ""
         val myFormat =
             if (calendar.get(Calendar.YEAR) == Calendar.getInstance().get(Calendar.YEAR)) {
-                prefix = if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.getInstance()
-                        .get(Calendar.DAY_OF_MONTH)
-                ) {
-                    "Сегодня, "
-                } else if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.getInstance()
-                        .get(Calendar.DAY_OF_MONTH) + 1
-                ) {
-                    "Завтра, "
-                } else {
-                    ""
-                }
                 "dd MMMM"
             } else {
                 "dd MMMM yyyy"
@@ -231,6 +220,19 @@ class OrderFragment : Fragment() {
                 Toast.makeText(requireContext(), "Выберите дату заказа!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+            val prefix = if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.getInstance()
+                    .get(Calendar.DAY_OF_MONTH)
+            ) {
+                "Сегодня, "
+            } else if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.getInstance()
+                    .get(Calendar.DAY_OF_MONTH) + 1
+            ) {
+                "Завтра, "
+            } else {
+                ""
+            }
+            val checkedChip = selectTimeDialogBinding!!.timeChipGroup.findViewById<Chip>(selectTimeDialogBinding!!.timeChipGroup.checkedChipId)
+            binding.tvDateTime.text = "$prefix ${selectTimeDialogBinding!!.tvDateTime.text} ${checkedChip.text}"
             selectTimeDialog.cancel()
         }
         selectTimeDialogBinding!!.tvDateTime.setOnClickListener {
