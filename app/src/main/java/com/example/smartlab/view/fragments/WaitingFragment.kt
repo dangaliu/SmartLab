@@ -1,12 +1,13 @@
 package com.example.smartlab.view.fragments
 
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.smartlab.R
 import com.example.smartlab.databinding.FragmentWaitingBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,6 +35,13 @@ class WaitingFragment : Fragment() {
             delay(2000)
             binding.waitingContainer.visibility = View.GONE
             binding.mainContainer.visibility = View.VISIBLE
+        }
+        setListeners()
+    }
+
+    private fun setListeners() {
+        binding.btnGoMain.setOnClickListener {
+            findNavController().popBackStack(R.id.analyzesFragment, false)
         }
     }
 }
