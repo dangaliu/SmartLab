@@ -5,4 +5,7 @@
         <item>Женский</item>
     </string-array>
     <string name="genderHint">Пол</string>
+
+    <string name="lastScreenText">Не забудьте ознакомиться с <font color="#1A6FEE">правилами подготовки к сдаче анализов</font>
+    </string>
 </resources>
