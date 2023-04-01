@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,11 +15,13 @@
         android:textStyle="bold" />
 
     <LinearLayout
+        android:id="@+id/waitingContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ProgressBar
             android:layout_width="66dp"
@@ -32,5 +35,86 @@
             android:layout_marginTop="26dp"
             android:text="Связываемся с банком..."
             android:textColor="#939396" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="bottom|center_horizontal"
+        android:visibility="gone"
+        android:id="@+id/mainContainer"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginHorizontal="85dp"
+            android:layout_marginTop="128dp"
+            android:src="@drawable/onboarding_01" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ваш заказ успешно оплачен!"
+            android:textColor="#00B712"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="42dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Вам осталось дождаться приезда медсестры и сдать анализы. До скорой встречи!"
+            android:textColor="#939396"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="42dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:gravity="top|center_horizontal"
+            android:text="Вам осталось дождаться приезда медсестры и сдать анализы. До скорой встречи!"
+            android:textColor="#939396"
+            android:textSize="14sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCheckPokupki"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="20dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="Чек покупки"
+            android:textAllCaps="false"
+            android:textColor="@color/accent"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="10dp"
+            app:strokeColor="@color/accent"
+            app:strokeWidth="1dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoMain"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="32dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="На главную"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/accent"
+            app:cornerRadius="10dp" />
+
     </LinearLayout>
 </FrameLayout>

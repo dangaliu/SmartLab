@@ -26,9 +26,13 @@ class WaitingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycleScope.launch {
+            binding.waitingContainer.visibility = View.VISIBLE
+            binding.mainContainer.visibility = View.GONE
             delay(3000)
             binding.tvWaiting.text = "Производим оплату..."
             delay(2000)
+            binding.waitingContainer.visibility = View.GONE
+            binding.mainContainer.visibility = View.VISIBLE
         }
     }
 }
